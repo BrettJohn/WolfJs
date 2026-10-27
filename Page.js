@@ -147,71 +147,7 @@ class Page extends Element {
         return p;
     }
 
-    async checkUser() {
-        window.Username = '';
-        let resultObj = await backEnd({ Operation: 'getUsername' });
-        let usernameStr = resultObj.Username;
-        if (this.usernameValidation(usernameStr) !== '') {
-            Core.goto('Login.php');
-        } else {
-            window.Username = usernameStr;
-            let resultObj = await backEnd({ Operation: 'validateAccount' });
-            if (resultObj.validateResult === 'Success') {
-                this.userRoleStr = resultObj.userRole;
-                this.coreRoleStr = resultObj.coreRole;
-                this.vettedBool = resultObj.vettedBool;
-                this.ownerObj = resultObj.owner;
-            } else if (resultObj.validateResult === 'Pending') {
-                this.showPending();
-
-                await new Promise(() => {});
-            } else {
-                Core.goto('Login.php');
-            }
-        }
-    }
-
-    showPending() {
-        document.body.innerHTML = '';
-        let textCss = { fontSize: '20px', margin: '0 0 12px 0' };
-        let logoutBtn = this.a({ html: 'Log out', css: { fontSize: '18px' }, onclick: async () => {
-            await backEnd({ Operation: 'logoutAccount' });
-            Core.goto('Login.php');
-        } });
-        let panel = this.div({ css: { ...this.panelBaseCss(), maxWidth: '560px', margin: '0 auto',
-            padding: '40px 30px' } })
-            .add(this.h1({ html: 'Waiting for approval' }))
-            .add(this.p({ textContent: `Your ${document.appName} membership is waiting for an admin to approve it.`,
-                css: textCss }))
-            .add(this.p({ textContent: 'Your username is', css: { ...textCss, margin: '24px 0 4px 0' } }))
-            .add(this.p({ textContent: window.Username,
-                css: { fontSize: '32px', fontWeight: 'bold', letterSpacing: '2px', margin: '0 0 28px 0' } }))
-            .add(logoutBtn)
-            .add(this.p({ css: { margin: '28px 0 0 0' } }).add(this.a({ html: 'Delete my account',
-                css: { fontSize: '14px', color: this.color13 }, onclick: () => this.askDeleteAccount() })));
-        document.body.appendChild(this.div({ css: { ...this.centerTextCss, color: this.color1, padding: '12% 16px' } })
-            .add(panel));
-    }
-
-    async checkAdmin() {
-       await this.checkUser();
-        if (!this.isAdmin()) {
-            Core.goto('Index.php');
-        }
-    }
-    isAdmin() {
-        let adminBool = ['Admin', 'Owner'].includes(this.userRoleStr) && this.vettedBool;
-        return adminBool || this.isCoreAdmin();
-    }
-    isAppOwner() {
-        return this.userRoleStr === 'Owner' && this.vettedBool;
-    }
-    isCoreAdmin() {
-        return this.coreRoleStr === 'Admin' && this.vettedBool;
-    }
-    isOwner() {
-        return Boolean(this.ownerObj?.OwnerBool);
-    }
+    async checkUser() {}
 
     inputRow(html, inputEl, rowEl = null) {
         let rowObj = { css: { paddingBottom: '20px' } };

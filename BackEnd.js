@@ -48,24 +48,6 @@ function stopLoading() {
     loadingOverlay().style.display = 'none';
 }
 
-async function backEnd(inputObj = null) {
-    if (!('Auth' in inputObj)) {
-        inputObj.Auth = {};
-    }
-    inputObj.Auth.Username = window.Username;
-    inputObj.Auth.App = document.appName;
-    startLoading();
-    try {
-        let resultObj = await fetchApi(backendUrlStr, inputObj);
-        if (resultObj.response?.syncRequired) {
-            Core.goto('Sync.php');
-            await new Promise(() => {});
-        }
-        return resultObj.response;
-    } finally {
-        stopLoading();
-    }
-}
 async function fetchApi(apiUrlStr, inputObj = null) {
     return await fetch(apiUrlStr + '/', {
         method: 'POST',
