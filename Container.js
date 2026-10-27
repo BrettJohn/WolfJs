@@ -98,53 +98,6 @@ class Container extends Page {
         return popup;
     }
 
-    askDeleteAccount() {
-        let dangerCss = { backgroundColor: this.color13 };
-        let cancelBtn = this.button({ html: 'Cancel' });
-        cancelBtn.dataset.default = 'true';
-        let continueBtn = this.button({ html: 'Continue', css: dangerCss });
-        let popup = this.popup(this.div()
-            .add(this.h2({ textContent: 'Delete your account in every app?' }))
-            .add(this.p({ textContent: `Your login is one account for every Wolf app, not just ${document.appName}.
-                Deleting it removes your profile, pictures and memberships in all of them, and it cannot be undone.
-                Payments are kept for accounting, without your details.` }))
-            .add(continueBtn).add(cancelBtn)).bad();
-        cancelBtn.onclick = () => popup.remove();
-        continueBtn.onclick = () => {
-            popup.remove();
-            let passwordInput = this.input({ type: 'password', autocomplete: 'new-password',
-                placeholder: 'Password' });
-            let errorP = this.p({ css: { color: this.color13 } });
-            let keepBtn = this.button({ html: 'Cancel' });
-            keepBtn.dataset.default = 'true';
-            let deleteBtn = this.button({ html: 'Delete my account in every app', css: dangerCss });
-            let confirmPopup = this.popup(this.div()
-                .add(this.h2({ textContent: 'Are you sure?' }))
-                .add(this.p({ textContent: `This deletes your account in every app. Type your password to confirm.` }))
-                .add(passwordInput).add(errorP).add(deleteBtn).add(keepBtn)).bad();
-            keepBtn.onclick = () => confirmPopup.remove();
-            passwordInput.addEventListener('keydown', (event) => {
-                if (event.key === 'Enter') {
-                    event.preventDefault();
-                    deleteBtn.click();
-                }
-            });
-            deleteBtn.onclick = async () => {
-                let resultObj = await backEnd({ Operation: 'deleteAccount', Password: passwordInput.value });
-                if (resultObj?.deleteAccountResult !== 'Success') {
-                    errorP.textContent = resultObj?.Error ?? 'Your account could not be deleted';
-                    return;
-                }
-                confirmPopup.remove();
-                let okBtn = this.button({ html: 'OK', onclick: () => Core.goto('./') });
-                okBtn.dataset.default = 'true';
-                this.popup(this.div()
-                    .add(this.h2({ textContent: 'Your account has been deleted' }))
-                    .add(okBtn)).good();
-            };
-        };
-    }
-
     glowEl(el, colorStr, swirlBool = false) {
         let nearStr = `color-mix(in srgb, ${colorStr} 70%, transparent)`;
         let farStr = `color-mix(in srgb, ${colorStr} 30%, transparent)`;
