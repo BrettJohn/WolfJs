@@ -18,9 +18,9 @@ Page.prototype.imageUpload = function imageUpload(nameStr, html = Core.splitCame
     });
     div.add(label);
     let img = this.img({ css: { maxWidth: '100%', maxHeight: '180px', marginTop: '8px', borderRadius: '5px' } });
-    img.style.display = 'none';
+    img.hide();
 
-    img.addEventListener('load', () => img.style.display = '');
+    img.addEventListener('load', () => img.show());
     div.add(img);
     let input = this.input({
         type: 'file',

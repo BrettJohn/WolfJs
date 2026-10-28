@@ -110,12 +110,12 @@ Page.prototype.scene = function(obj) {
                 }
             });
             let hoverFn = (onBool) => {
-                Core.copyCss({
+                triangleEl.css({
                     transform: moveFn(onBool ? 10 : 3),
                     fill: onBool ? this.color2 : 'rgba(8, 10, 14, 0.85)',
                     filter: onBool ? `drop-shadow(0 0 8px ${this.color2})` : 'none'
-                }, triangleEl);
-                Core.copyCss({ transform: moveFn(onBool ? 10 : 3), stroke: onBool ? '#111111' : this.color2 }, arrowEl);
+                });
+                arrowEl.css({ transform: moveFn(onBool ? 10 : 3), stroke: onBool ? '#111111' : this.color2 });
                 tipLbl.textContent = `Switch to ${sceneObj.viewArr[i].nameStr}`;
                 tipLbl.style.opacity = onBool ? 1 : 0;
             };
@@ -148,13 +148,17 @@ Page.prototype.scene = function(obj) {
         sceneObj.viewInt = viewInt;
         sceneObj.div.style.backgroundSize = viewInt < sceneObj.viewArr.length ? '100% 100%' : '50% 50%';
         if (sceneObj.diamondDiv) {
-            sceneObj.diamondDiv.style.display = viewInt < sceneObj.viewArr.length ? 'none' : 'block';
+            if (viewInt < sceneObj.viewArr.length) {
+                sceneObj.diamondDiv.hide();
+            } else {
+                sceneObj.diamondDiv.show('block');
+            }
         }
         sceneObj.chipArr.forEach(
-            (chipEl, i) => Core.copyCss({
+            (chipEl, i) => chipEl.css({
                 outline: i === viewInt ? '1px solid' : 'none',
                 opacity: i === viewInt ? 1 : 0.6
-            }, chipEl)
+            })
         );
         sceneObj.onViewFn?.(viewInt);
         sceneObj.render();
