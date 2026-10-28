@@ -6,8 +6,18 @@ class Element extends Theme {
         this.breakpointObj = { sm: 576, md: 768, lg: 992, xl: 1200 };
         this.responsiveMatrix = [];
         window.addEventListener('resize', () => {
-            this.responsiveMatrix = this.responsiveMatrix.filter(([eachEl]) => eachEl.isConnected);
-            this.responsiveMatrix.forEach(([eachEl, eachFn]) => Core.copyCss(eachFn(window.innerWidth), eachEl));
+            let connectedMatrix = [];
+            for (let responsiveArr of this.responsiveMatrix) {
+                if (responsiveArr[0].isConnected) {
+                    connectedMatrix.push(responsiveArr);
+                }
+            }
+            this.responsiveMatrix = connectedMatrix;
+            for (let responsiveArr of connectedMatrix) {
+                let eachEl = responsiveArr[0];
+                let eachFn = responsiveArr[1];
+                Core.copyCss(eachFn(window.innerWidth), eachEl);
+            }
         });
         this.imageUploadCountInt = 0;
         this.centerTextCss = { textAlign: 'center' };
@@ -276,7 +286,9 @@ class Element extends Theme {
         delete obj.value;
         let select = this.core(obj, 'select');
         this.controlArr.push(select);
-        optionArr.forEach(([value, textContent]) => select.add(this.option({ value, textContent })));
+        for (let optionPairArr of optionArr) {
+            select.add(this.option({ value: optionPairArr[0], textContent: optionPairArr[1] }));
+        }
         if (valueStr !== undefined) {
             select.value = valueStr;
         }

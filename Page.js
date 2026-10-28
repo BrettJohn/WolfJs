@@ -42,13 +42,17 @@ class Page extends Element {
     loadApp() { alert('TODO'); }
 
     addCssObj(selectorObj) {
-        let ruleFn = (css) => Object.entries(css)
-            .map(([keyStr, value]) => `${keyStr.replace(/[A-Z]/g, (c) => `-${c.toLowerCase()}`)}: ${value};`).join(' ');
-        this.addCss(
-            Object.entries(selectorObj)
-                .map(([selectorStr, css]) => `${selectorStr} { ${ruleFn(css)} }`)
-                .join('\n')
-        );
+        let ruleArr = [];
+        for (let selectorStr in selectorObj) {
+            let ruleCss = selectorObj[selectorStr];
+            let declarationArr = [];
+            for (let keyStr in ruleCss) {
+                let propertyStr = keyStr.replace(/[A-Z]/g, (c) => `-${c.toLowerCase()}`);
+                declarationArr.push(`${propertyStr}: ${ruleCss[keyStr]};`);
+            }
+            ruleArr.push(`${selectorStr} { ${declarationArr.join(' ')} }`);
+        }
+        this.addCss(ruleArr.join('\n'));
     }
 
     scrollbarCssObj() {

@@ -10,8 +10,8 @@ class Middled extends Container {
         this.containerEl.add(this.centeredRow().add(this.middledCol));
         this.addEnterKey(() => this.complete());
         document.addEventListener('keydown', (event) => {
-            if (event.key === 'Escape' && !event.defaultPrevented && !this.popupArr?.length
-                && !(typeof openDropdownArr !== 'undefined' && openDropdownArr.length)) {
+            let dropdownOpenBool = typeof openDropdownArr !== 'undefined' && openDropdownArr.length;
+            if (event.key === 'Escape' && !event.defaultPrevented && !this.popupArr?.length && !dropdownOpenBool) {
                 Core.goto(this.doneUrl?.() ?? 'Index.php');
             }
         });

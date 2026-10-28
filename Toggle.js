@@ -13,6 +13,12 @@ Page.prototype.toggle = function(obj, optionArr, onchangeFn = null) {
     toggleObj.div = this.row({ css: { flexWrap: 'nowrap', ...obj.css } });
     let lastInt = optionArr.length - 1;
     optionArr.forEach((optionObj, i) => {
+        let radiusStr = '0';
+        if (i === 0) {
+            radiusStr = '5px 0 0 5px';
+        } else if (i === lastInt) {
+            radiusStr = '0 5px 5px 0';
+        }
         let btn = this.button({
             html: optionObj.Name,
             hover: {},
@@ -22,7 +28,7 @@ Page.prototype.toggle = function(obj, optionArr, onchangeFn = null) {
                 padding: '0 10px',
                 margin: 0,
                 boxShadow: 'none',
-                borderRadius: i === 0 ? '5px 0 0 5px' : i === lastInt ? '0 5px 5px 0' : '0',
+                borderRadius: radiusStr,
                 ...obj.btnCss
             },
             onclick: () => {

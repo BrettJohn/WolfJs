@@ -23,7 +23,10 @@ class Core {
         if (fromObj['css']) {
             Core.copyCss(fromObj['css'], toObj);
         }
-        Object.entries(fromObj['attr'] ?? {}).forEach(([keyStr, value]) => toObj.setAttribute(keyStr, value));
+        let attrObj = fromObj['attr'] ?? {};
+        for (let keyStr in attrObj) {
+            toObj.setAttribute(keyStr, attrObj[keyStr]);
+        }
         return toObj;
     }
     static findObj(objArr, value, attributeStr = 'Id') {

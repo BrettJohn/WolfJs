@@ -50,12 +50,12 @@ Page.prototype.math = function(texStr) {
         while (indexInt < tokenArr.length && !stopArr.includes(peekFn())) {
             let nodeObj = atomFn();
             while (['^', '_'].includes(peekFn())) {
-                nodeObj = { kindStr: 'script', baseObj: nodeObj, ...nodeObj.kindStr === 'script' ? nodeObj : {} };
+                nodeObj = { kindStr: 'Script', baseObj: nodeObj, ...nodeObj.kindStr === 'Script' ? nodeObj : {} };
                 nodeObj[tokenArr[indexInt++] === '^' ? 'supObj' : 'subObj'] = atomFn();
             }
             nodeArr.push(nodeObj);
         }
-        return { kindStr: 'list', nodeArr };
+        return { kindStr: 'List', nodeArr };
     };
     let atomFn = () => {
         let tokenStr = peekFn();
@@ -66,28 +66,28 @@ Page.prototype.math = function(texStr) {
             return groupObj;
         }
         if (tokenStr === '\\frac' || tokenStr === '\\tfrac') {
-            return { kindStr: 'frac', smallBool: tokenStr === '\\tfrac', topObj: atomFn(), bottomObj: atomFn() };
+            return { kindStr: 'Frac', smallBool: tokenStr === '\\tfrac', topObj: atomFn(), bottomObj: atomFn() };
         }
         if (tokenStr === '\\mathbf') {
             let bodyObj = atomFn();
-            (bodyObj.nodeArr ?? [bodyObj]).filter((childObj) => childObj.kindStr === 'variable')
-                .forEach((childObj) => childObj.kindStr = 'bold');
+            (bodyObj.nodeArr ?? [bodyObj]).filter((childObj) => childObj.kindStr === 'Variable')
+                .forEach((childObj) => childObj.kindStr = 'Bold');
             return bodyObj;
         }
         if (tokenStr === '\\hat' || tokenStr === '\\dot') {
             let bodyObj = atomFn();
             let letterStr = bodyObj.textStr ?? bodyObj.nodeArr.map((childObj) => childObj.textStr).join('');
-            return { kindStr: 'variable', textStr: letterStr + (tokenStr === '\\hat' ? '\u0302' : '\u0307') };
+            return { kindStr: 'Variable', textStr: letterStr + (tokenStr === '\\hat' ? '\u0302' : '\u0307') };
         }
         if (tokenStr === '\\sqrt') {
-            return { kindStr: 'sqrt', bodyObj: atomFn() };
+            return { kindStr: 'Sqrt', bodyObj: atomFn() };
         }
         if (tokenStr === '\\text') {
-            return { kindStr: 'text', textStr: rawGroupFn() };
+            return { kindStr: 'Text', textStr: rawGroupFn() };
         }
         if (tokenStr === '\\left' || tokenStr === '\\right') {
             let delimiterStr = tokenArr[indexInt++];
-            return { kindStr: 'delimiter', textStr: delimiterStr === '.' ? '' : delimiterStr };
+            return { kindStr: 'Delimiter', textStr: delimiterStr === '.' ? '' : delimiterStr };
         }
         if (tokenStr === '\\begin') {
             rawGroupFn();
@@ -104,26 +104,30 @@ Page.prototype.math = function(texStr) {
             }
             indexInt++;
             rawGroupFn();
-            return { kindStr: 'aligned', rowMatrix };
+            return { kindStr: 'Aligned', rowMatrix };
         }
         if (tokenStr === '\\sum' || tokenStr === '\\int') {
-            return { kindStr: 'operator', textStr: tokenStr === '\\sum' ? '∑' : '∫', stackBool: tokenStr === '\\sum' };
+            return { kindStr: 'Operator', textStr: tokenStr === '\\sum' ? '∑' : '∫', stackBool: tokenStr === '\\sum' };
         }
         if (tokenStr in spaceObj) {
-            return { kindStr: 'space', widthStr: spaceObj[tokenStr] };
+            return { kindStr: 'Space', widthStr: spaceObj[tokenStr] };
         }
         if (['\\sin', '\\cos', '\\tan', '\\csc', '\\sec', '\\cot', '\\ln', '\\log'].includes(tokenStr)) {
-            return { kindStr: 'function', textStr: tokenStr.slice(1) };
+            return { kindStr: 'Function', textStr: tokenStr.slice(1) };
         }
         let textStr = symbolObj[tokenStr?.slice(1)] ?? (tokenStr === '-' ? '−' : tokenStr);
-        let kindStr = /^[a-zA-Zα-ω]$/.test(textStr) ? 'variable' : /^[=+−<>≥∝×·∣]$/.test(textStr) ? 'binary'
-            : 'upright';
+        let kindStr = 'Upright';
+        if (/^[a-zA-Zα-ω]$/.test(textStr)) {
+            kindStr = 'Variable';
+        } else if (/^[=+−<>≥∝×·∣]$/.test(textStr)) {
+            kindStr = 'Binary';
+        }
         return { kindStr, textStr };
     };
     let rootObj = listFn([]);
     let renderFn = (nodeObj, previousKindStr = '') => {
         let kindStr = nodeObj.kindStr;
-        if (kindStr === 'list') {
+        if (kindStr === 'List') {
             let listEl = this.span();
             let lastKindStr = '';
             nodeObj.nodeArr.forEach((childObj) => {
@@ -132,42 +136,42 @@ Page.prototype.math = function(texStr) {
             });
             return listEl;
         }
-        if (kindStr === 'variable') {
+        if (kindStr === 'Variable') {
             return this.span({ textContent: nodeObj.textStr, css: { fontStyle: 'italic' } });
         }
-        if (kindStr === 'binary') {
-            let unaryBool = ['', 'binary', 'delimiter'].includes(previousKindStr) && nodeObj.textStr === '−';
+        if (kindStr === 'Binary') {
+            let unaryBool = ['', 'Binary', 'Delimiter'].includes(previousKindStr) && nodeObj.textStr === '−';
             return this.span({ textContent: nodeObj.textStr, css: { margin: unaryBool ? 0 : '0 0.22em' } });
         }
-        if (kindStr === 'upright' || kindStr === 'delimiter') {
-            let tallBool = kindStr === 'delimiter' && rootObj.nodeArr.some((childObj) => childObj.kindStr === 'frac');
+        if (kindStr === 'Upright' || kindStr === 'Delimiter') {
+            let tallBool = kindStr === 'Delimiter' && rootObj.nodeArr.some((childObj) => childObj.kindStr === 'Frac');
             return this.span({
                 textContent: nodeObj.textStr,
                 css: tallBool ? { fontSize: '1.5em', lineHeight: 1, verticalAlign: 'middle' } : {}
             });
         }
-        if (kindStr === 'function') {
+        if (kindStr === 'Function') {
             return this.span({
                 textContent: nodeObj.textStr,
                 css: { marginLeft: previousKindStr ? '0.17em' : 0, marginRight: '0.12em' }
             });
         }
-        if (kindStr === 'text') {
+        if (kindStr === 'Text') {
             return this.span({ textContent: nodeObj.textStr, css: { fontStyle: 'normal' } });
         }
-        if (kindStr === 'space') {
+        if (kindStr === 'Space') {
             return this.span({ css: { display: 'inline-block', width: nodeObj.widthStr } });
         }
-        if (kindStr === 'bold') {
-            return this.span({ textContent: nodeObj.textStr, css: { fontWeight: 'bold' } });
+        if (kindStr === 'Bold') {
+            return this.span({ textContent: nodeObj.textStr, css: { fontWeight: 'Bold' } });
         }
-        if (kindStr === 'sqrt') {
+        if (kindStr === 'Sqrt') {
             return this.span({ css: { whiteSpace: 'nowrap' } }).add(this.span({ textContent: '√' }))
                 .add(this.span({ css: { borderTop: '1px solid currentColor', paddingLeft: '0.1em' } })
                     .add(renderFn(nodeObj.bodyObj))
                 );
         }
-        if (kindStr === 'frac') {
+        if (kindStr === 'Frac') {
             return this.span({
                 css: {
                     display: 'inline-flex',
@@ -191,13 +195,13 @@ Page.prototype.math = function(texStr) {
                     .add(renderFn(nodeObj.bottomObj))
                 );
         }
-        if (kindStr === 'operator') {
+        if (kindStr === 'Operator') {
             return this.span({
                 textContent: nodeObj.textStr,
                 css: { fontSize: '1.5em', lineHeight: 1, verticalAlign: 'middle' }
             });
         }
-        if (kindStr === 'aligned') {
+        if (kindStr === 'Aligned') {
             let gridEl = this.span({
                 css: {
                     display: 'inline-grid',
@@ -223,7 +227,7 @@ Page.prototype.math = function(texStr) {
         }
         let baseObj = nodeObj.baseObj;
         let scriptCss = { fontSize: '0.7em', lineHeight: 1 };
-        if (baseObj.kindStr === 'operator' && baseObj.stackBool) {
+        if (baseObj.kindStr === 'Operator' && baseObj.stackBool) {
             return this.span({
                 css: {
                     display: 'inline-flex',
@@ -233,9 +237,9 @@ Page.prototype.math = function(texStr) {
                     margin: '0 0.15em'
                 }
             })
-                .add(this.span({ css: scriptCss }).add(renderFn(nodeObj.supObj ?? { kindStr: 'list', nodeArr: [] })))
+                .add(this.span({ css: scriptCss }).add(renderFn(nodeObj.supObj ?? { kindStr: 'List', nodeArr: [] })))
                 .add(renderFn(baseObj))
-                .add(this.span({ css: scriptCss }).add(renderFn(nodeObj.subObj ?? { kindStr: 'list', nodeArr: [] })));
+                .add(this.span({ css: scriptCss }).add(renderFn(nodeObj.subObj ?? { kindStr: 'List', nodeArr: [] })));
         }
         let stackEl = this.span({
             css: { display: 'inline-flex', flexDirection: 'column', verticalAlign: 'middle', marginLeft: '0.05em' }
@@ -250,7 +254,7 @@ Page.prototype.math = function(texStr) {
             );
             stackEl.add(renderFn(nodeObj.supObj ?? nodeObj.subObj));
         }
-        let gapBool = ['operator', 'function'].includes(baseObj.kindStr);
+        let gapBool = ['Operator', 'Function'].includes(baseObj.kindStr);
         let baseEl = renderFn(baseObj, previousKindStr);
         baseEl.style.marginRight = 0;
         let wrapCss = { whiteSpace: 'nowrap', marginRight: gapBool ? '0.17em' : 0 };

@@ -197,13 +197,15 @@ Page.prototype.dataGrid = async function(Operation, controllerStr, obj = {}) {
         let controlMatrix = [];
         grid.setSelect = async (i) => {
             await grid.callBackend(perPageSelect.selectedItem, i);
-            controlMatrix.forEach(([pageInt, controlEl]) => {
+            for (let pageControlArr of controlMatrix) {
+                let pageInt = pageControlArr[0];
+                let controlEl = pageControlArr[1];
                 controlEl.style.color = pageInt === currentPageInt ? pageSelectActiveColor : pageSelectColor;
-            });
+            }
         };
-        for (let i = Math.max(1, currentPageInt - 5);
-             i <= (currentPageInt + 5 > paginationInt ? paginationInt : currentPageInt + 5);
-             i++) {
+        let firstPageInt = Math.max(1, currentPageInt - 5);
+        let lastPageInt = currentPageInt + 5 > paginationInt ? paginationInt : currentPageInt + 5;
+        for (let i = firstPageInt; i <= lastPageInt; i++) {
             let a = this.a({
                 html: i,
                 css: { paddingRight: '5px', color: pageSelectColor },
@@ -251,16 +253,20 @@ Page.prototype.dataGrid = async function(Operation, controllerStr, obj = {}) {
             backgroundColor: `color-mix(in srgb, ${this.color2} 30%, transparent)`,
             color: this.color1
         };
-        Object.entries(grid.rowObj).forEach(
-            ([rowIdStr, tr]) => [...tr.children].forEach(
-                (td, i) => Core.copyCss(
-                    rowIdStr === String(idStr)
-                        ? { ...selectedCss, boxShadow: i ? 'none' : `inset 4px 0 0 ${this.color2}` }
-                        : { backgroundColor: '', color: '', boxShadow: 'none' },
-                    td
-                )
-            )
-        );
+        let rowObj = grid.rowObj;
+        for (let rowIdStr in rowObj) {
+            let tr = rowObj[rowIdStr];
+            let selectedBool = rowIdStr === String(idStr);
+            let cellArr = [...tr.children];
+            for (let i = 0; i < cellArr.length; i++) {
+                let cellCss = { backgroundColor: '', color: '', boxShadow: 'none' };
+                if (selectedBool) {
+                    let boxShadowStr = i ? 'none' : `inset 4px 0 0 ${this.color2}`;
+                    cellCss = { ...selectedCss, boxShadow: boxShadowStr };
+                }
+                Core.copyCss(cellCss, cellArr[i]);
+            }
+        }
     };
     grid.setData = (objArr) => {
         grid.rowObj = {};

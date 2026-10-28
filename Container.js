@@ -115,7 +115,8 @@ class Container extends Page {
     markdownPopup(fileStr, headCss = {}, paraCss = {}) {
         let closeBtn = this.button({ html: 'Close', onclick: () => popup.remove() });
         closeBtn.dataset.default = 'true';
-        let [titleStr, ...paraArr] = Core.fileContents(fileStr).trim().split(/\n\s*\n/);
+        let paraArr = Core.fileContents(fileStr).trim().split(/\n\s*\n/);
+        let titleStr = paraArr.shift();
         let bodyEl = this.div({ css: { textAlign: 'left', padding: '12px 10px' } })
             .add(this.h2({ textContent: titleStr.replace(/^# /, ''), css: headCss }));
         paraArr.forEach((paraStr) => bodyEl.add(this.p({ css: paraCss }).add(this.markdown(paraStr))));
@@ -149,7 +150,12 @@ class Container extends Page {
             fill: 'forwards'
         };
         let swirlTimingObj = { duration: 2400, iterations: iterationsInt, fill: 'forwards' };
-        let [frameArr, timingObj] = swirlBool ? [swirlArr, swirlTimingObj] : [pulseArr, pulseTimingObj];
+        let frameArr = pulseArr;
+        let timingObj = pulseTimingObj;
+        if (swirlBool) {
+            frameArr = swirlArr;
+            timingObj = swirlTimingObj;
+        }
         el.glowAnimation?.cancel();
         el.glowAnimation = el.animate(frameArr, timingObj);
     }

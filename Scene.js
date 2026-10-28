@@ -170,7 +170,7 @@ Page.prototype.scene = function(obj) {
         return sceneObj;
     }
     let programObj = glObj.createProgram();
-    [
+    let shaderMatrix = [
         [
             glObj.VERTEX_SHADER,
             `
@@ -204,12 +204,13 @@ Page.prototype.scene = function(obj) {
             gl_FragColor = vec4(mix(pow(lit, vec3(0.9)), color, flatShade), 1.0);
         }`
         ]
-    ].forEach(([typeInt, sourceStr]) => {
-        let shaderObj = glObj.createShader(typeInt);
-        glObj.shaderSource(shaderObj, sourceStr);
+    ];
+    for (let shaderArr of shaderMatrix) {
+        let shaderObj = glObj.createShader(shaderArr[0]);
+        glObj.shaderSource(shaderObj, shaderArr[1]);
         glObj.compileShader(shaderObj);
         glObj.attachShader(programObj, shaderObj);
-    });
+    }
     glObj.linkProgram(programObj);
     glObj.useProgram(programObj);
     sceneObj.locationObj = {
@@ -232,34 +233,50 @@ Page.prototype.scene = function(obj) {
         let sideFlt = faceInt % 2 ? -0.5 : 0.5;
         let normalArr = [0, 0, 0];
         normalArr[axisInt] = sideFlt * 2;
-        [[-1, -1], [1, -1], [1, 1], [-1, -1], [1, 1], [-1, 1]].forEach(([uInt, vInt]) => {
+        for (let cornerArr of [[-1, -1], [1, -1], [1, 1], [-1, -1], [1, 1], [-1, 1]]) {
             let pointArr = [0, 0, 0];
             pointArr[axisInt] = sideFlt;
-            pointArr[(axisInt + 1) % 3] = uInt / 2;
-            pointArr[(axisInt + 2) % 3] = vInt / 2;
+            pointArr[(axisInt + 1) % 3] = cornerArr[0] / 2;
+            pointArr[(axisInt + 2) % 3] = cornerArr[1] / 2;
             boxArr.push(...pointArr, ...normalArr);
-        });
+        }
     }
     let cylinderArr = [];
     let segmentInt = 32;
     for (let i = 0; i < segmentInt; i++) {
-        let [startArr, endArr] = [i, i + 1].map((stepInt) => {
+        let rimFn = (stepInt) => {
             let angleFlt = stepInt / segmentInt * Math.PI * 2;
             return [Math.cos(angleFlt) / 2, Math.sin(angleFlt) / 2];
-        });
-        [[startArr, -0.5], [endArr, -0.5], [endArr, 0.5], [startArr, -0.5], [endArr, 0.5], [startArr, 0.5]]
-            .forEach(([[xFlt, yFlt], zFlt]) => cylinderArr.push(xFlt, yFlt, zFlt, xFlt * 2, yFlt * 2, 0));
-        [-0.5, 0.5].forEach(
-            (zFlt) => [[0, 0], startArr, endArr]
-                .forEach(([xFlt, yFlt]) => cylinderArr.push(xFlt, yFlt, zFlt, 0, 0, zFlt * 2))
-        );
+        };
+        let startArr = rimFn(i);
+        let endArr = rimFn(i + 1);
+        let side3dArr = [
+            [startArr, -0.5],
+            [endArr, -0.5],
+            [endArr, 0.5],
+            [startArr, -0.5],
+            [endArr, 0.5],
+            [startArr, 0.5]
+        ];
+        for (let sideArr of side3dArr) {
+            let pointArr = sideArr[0];
+            let zFlt = sideArr[1];
+            cylinderArr.push(pointArr[0], pointArr[1], zFlt, pointArr[0] * 2, pointArr[1] * 2, 0);
+        }
+        for (let zFlt of [-0.5, 0.5]) {
+            for (let pointArr of [[0, 0], startArr, endArr]) {
+                cylinderArr.push(pointArr[0], pointArr[1], zFlt, 0, 0, zFlt * 2);
+            }
+        }
     }
-    Object.entries({ box: boxArr, cylinder: cylinderArr }).forEach(([meshStr, vertexArr]) => {
+    let vertexObj = { box: boxArr, cylinder: cylinderArr };
+    for (let meshStr in vertexObj) {
+        let vertexArr = vertexObj[meshStr];
         let bufferObj = glObj.createBuffer();
         glObj.bindBuffer(glObj.ARRAY_BUFFER, bufferObj);
         glObj.bufferData(glObj.ARRAY_BUFFER, new Float32Array(vertexArr), glObj.STATIC_DRAW);
         sceneObj.meshObj[meshStr] = { bufferObj, countInt: vertexArr.length / 6 };
-    });
+    }
 
     sceneObj.group = (parentObj = null) => ({ parentObj, offsetArr: [0, 0, 0] });
     sceneObj.place = (partObj) => {
@@ -360,8 +377,12 @@ Page.prototype.scene = function(obj) {
         };
         glObj.enable(glObj.SCISSOR_TEST);
         glObj.uniform3fv(locationObj.light, sceneObj.lightArr);
-        rectArr.forEach(([viewInt, xInt, yInt, widthInt, heightInt]) => {
-            let viewObj = sceneObj.viewArr[viewInt];
+        for (let rectViewArr of rectArr) {
+            let viewObj = sceneObj.viewArr[rectViewArr[0]];
+            let xInt = rectViewArr[1];
+            let yInt = rectViewArr[2];
+            let widthInt = rectViewArr[3];
+            let heightInt = rectViewArr[4];
             let radiusFlt = viewObj.radiusFlt ?? sceneObj.radiusFlt;
             let centerArr = viewObj.centerArr ?? sceneObj.centerArr;
             for (let groupObj = viewObj.groupObj; groupObj; groupObj = groupObj.parentObj) {
@@ -397,7 +418,7 @@ Page.prototype.scene = function(obj) {
                 }
                 drawFn(partObj, partObj.splitInt, partObj.countInt - partObj.splitInt, partObj.colorArr, glObj.LINES);
             });
-        });
+        }
     };
     new ResizeObserver(() => sceneObj.render()).observe(sceneObj.canvas);
     if (sceneObj.singleBool) {
