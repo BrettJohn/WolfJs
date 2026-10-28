@@ -23,11 +23,9 @@ function loadingOverlay() {
     if (loadingOverlayDiv?.isConnected) {
         return loadingOverlayDiv;
     }
-    let spinnerDiv = document.createElement('div');
-    Core.copyCss(loadingSpinnerCss, spinnerDiv);
+    let spinnerDiv = document.createElement('div').css(loadingSpinnerCss);
     spinnerDiv.animate(loadingSpinFrameArr, { duration: 800, iterations: Infinity });
-    loadingOverlayDiv = document.createElement('div');
-    Core.copyCss(loadingOverlayCss, loadingOverlayDiv);
+    loadingOverlayDiv = document.createElement('div').css(loadingOverlayCss);
     loadingOverlayDiv.appendChild(spinnerDiv);
     document.body.appendChild(loadingOverlayDiv);
     return loadingOverlayDiv;
@@ -43,8 +41,7 @@ function startLoading() {
         return;
     }
     loadingOverlayTimerInt = setTimeout(() => {
-        let overlayDiv = loadingOverlay();
-        overlayDiv.style.display = 'flex';
+        loadingOverlay().show('flex');
     }, 250);
 }
 function stopLoading() {
@@ -52,8 +49,7 @@ function stopLoading() {
         return;
     }
     clearTimeout(loadingOverlayTimerInt);
-    let overlayDiv = loadingOverlay();
-    overlayDiv.style.display = 'none';
+    loadingOverlay().hide();
 }
 
 async function fetchApi(apiUrlStr, inputObj = null) {

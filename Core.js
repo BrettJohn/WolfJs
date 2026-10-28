@@ -10,7 +10,9 @@ class Core {
             toObj = {};
         }
         for (let propStr in fromObj) {
-            toObj[propStr] = fromObj[propStr];
+            if (propStr !== 'css') {
+                toObj[propStr] = fromObj[propStr];
+            }
         }
         toObj['add'] = function (childEl) {
             toObj.appendChild(childEl);
@@ -107,3 +109,18 @@ class Core {
         return !this.isBlankObject(this.findObj(objArr, value, attributeStr));
     }
 }
+
+window.Element.prototype.css = function(cssObj) {
+    Core.copyCss(cssObj, this);
+    return this;
+};
+
+window.Element.prototype.show = function(displayStr = '') {
+    this.style.display = displayStr;
+    return this;
+};
+
+window.Element.prototype.hide = function() {
+    this.style.display = 'none';
+    return this;
+};
