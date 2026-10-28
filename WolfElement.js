@@ -1,4 +1,4 @@
-class Element extends Theme {
+class WolfElement extends Theme {
     configurePage(obj) {
         this.configureTheme();
         Core.objCopy(obj, this);
@@ -16,7 +16,7 @@ class Element extends Theme {
             for (let responsiveArr of connectedMatrix) {
                 let eachEl = responsiveArr[0];
                 let eachFn = responsiveArr[1];
-                Core.copyCss(eachFn(window.innerWidth), eachEl);
+                eachEl.css(eachFn(window.innerWidth));
             }
         });
         this.imageUploadCountInt = 0;
@@ -99,20 +99,20 @@ class Element extends Theme {
         }
         el.addEventListener('mouseenter', () => {
             el.hoverRestoreObj = Object.fromEntries(Object.keys(hoverCss).map((keyStr) => [keyStr, el.style[keyStr]]));
-            Core.copyCss(hoverCss, el);
+            el.css(hoverCss);
         });
-        el.addEventListener('mouseleave', () => Core.copyCss(el.hoverRestoreObj ?? {}, el));
+        el.addEventListener('mouseleave', () => el.css(el.hoverRestoreObj ?? {}));
     }
 
     body(obj = {}) {
         this.bodyCss = { backgroundColor: this.color7, color: this.color0, display: 'inline' };
-        obj.css = Core.objCopy(obj.css, this.bodyCss);
+        obj.css = { ...this.bodyCss, ...obj.css };
         return Core.objCopy(obj, document.body);
     }
 
     label(obj = {}) {
         this.labelCss =  { marginBottom: '0px', color: this.color1, fontWeight: '100' };
-        obj.css = Core.objCopy(obj.css, this.labelCss);
+        obj.css = { ...this.labelCss, ...obj.css };
         return this.core(obj, 'label');
     }
 
@@ -131,7 +131,7 @@ class Element extends Theme {
         if (!obj.maxLength) {
             obj.maxLength = 50;
         }
-        obj.css = Core.objCopy(obj.css, { ...this.inputCss, ...this.fullWidthCss, ...this.inputThemeCss });
+        obj.css = { ...this.inputCss, ...this.fullWidthCss, ...this.inputThemeCss, ...obj.css };
         let input = this.core(obj, 'input');
         this.controlArr.push(input);
         return input;
@@ -150,14 +150,14 @@ class Element extends Theme {
             boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
             borderRadius: '5px'
         };
-        obj.css = Core.objCopy(obj.css, this.buttonCss);
+        obj.css = { ...this.buttonCss, ...obj.css };
         if (typeof obj.hover !== 'object') {
             this.buttonHoverCss = {
                 backgroundColor: this.color2,
                 color: this.color1,
                 ...this.buttonHoverThemeCss
             };
-            obj.hover = Core.objCopy(obj.hover, this.buttonHoverCss);
+            obj.hover = { ...this.buttonHoverCss, ...obj.hover };
         }
         this.addCss(`button:disabled, button[disabled] { cursor:not-allowed; }`);
         let button = this.core(obj, 'button');
@@ -166,28 +166,28 @@ class Element extends Theme {
     }
     ul(obj = {}) {
         this.ulCss = { padding: '1px', margin: '1px', listStyleType: 'none' };
-        obj.css = Core.objCopy(obj.css, this.ulCss);
+        obj.css = { ...this.ulCss, ...obj.css };
         return this.core(obj, 'ul');
     }
     ol(obj = {}) {
         this.ulCss = { padding: '1px', margin: '1px', listStyleType: 'none' };
-        obj.css = Core.objCopy(obj.css, this.ulCss);
+        obj.css = { ...this.ulCss, ...obj.css };
         return this.core(obj, 'ol');
     }
     li(obj = {}) {
         this.liCss = { padding: '1px', margin: '1px' };
-        obj.css = Core.objCopy(obj.css, this.liCss);
+        obj.css = { ...this.liCss, ...obj.css };
         return this.core(obj, 'li');
     }
     img(obj = {}) {
         this.imgCss = { borderRadius: '0px 0px 0px 0px', padding: '1px', margin: '1px' };
-        obj.css = Core.objCopy(obj.css, this.imgCss);
+        obj.css = { ...this.imgCss, ...obj.css };
         return this.core(obj, 'img');
     }
     div(obj = {}) { return this.core(obj, 'div'); }
     textarea(obj = {}) {
         this.textareaCss = { padding: '1px', margin: '1px' };
-        obj.css = Core.objCopy(obj.css, this.textareaCss);
+        obj.css = { ...this.textareaCss, ...obj.css };
         let textarea = this.core(obj, 'textarea');
         this.controlArr.push(textarea);
         return textarea;
@@ -200,43 +200,43 @@ class Element extends Theme {
             fontWeight: 'bold',
             margin: '0 0 25px 0'
         };
-        obj.css = Core.objCopy(obj.css, this.h1Css);
+        obj.css = { ...this.h1Css, ...obj.css };
         return this.core(obj, 'h1');
     }
     h3(obj = {}) {
         this.h3Css = { ...this.centerTextCss, color: this.color2, marginTop: '10px' };
-        obj.css = Core.objCopy(obj.css, this.h3Css);
+        obj.css = { ...this.h3Css, ...obj.css };
         return this.core(obj, 'h3');
     }
     h4(obj = {}) { return this.core(obj, 'h4'); }
     h5(obj = {}) {
         this.h5Css = { padding: 0, margin: 0, minHeight: '10px', wordWrap: 'break-word' };
-        obj.css = Core.objCopy(obj.css, this.h5Css);
+        obj.css = { ...this.h5Css, ...obj.css };
         return this.core(obj, 'h5');
     }
     hr(obj = {}) { return this.core(obj, 'hr'); }
     a(obj = {}) {
         this.aCss = { color: this.color2, cursor: 'pointer' };
-        obj.css = Core.objCopy(obj.css, this.aCss);
+        obj.css = { ...this.aCss, ...obj.css };
         return this.core(obj, 'a');
     }
     form(obj = {}) { return this.core(obj, 'form'); }
     span(obj = {}) { return this.core(obj, 'span'); }
     p(obj = {}) {
         this.pCss = { color: this.color1, fontSize: '12px' };
-        obj.css = Core.objCopy(obj.css, this.pCss);
+        obj.css = { ...this.pCss, ...obj.css };
         return this.core(obj, 'p');
     }
     style(obj = {}) { return this.core(obj, 'style'); }
     canvas(obj = {}) { return this.core(obj, 'canvas'); }
     svg(obj = {}) {
         this.svgCss = { display: 'block', fill: 'currentColor' };
-        obj.css = Core.objCopy(obj.css, this.svgCss);
+        obj.css = { ...this.svgCss, ...obj.css };
         return this.core(obj, 'svg');
     }
     path(obj = {}) {
         this.pathCss = { fill: 'none', stroke: 'currentColor', strokeWidth: '1.2' };
-        obj.css = Core.objCopy(obj.css, this.pathCss);
+        obj.css = { ...this.pathCss, ...obj.css };
         return this.core(obj, 'path');
     }
     icon(nameStr) {
@@ -260,7 +260,7 @@ class Element extends Theme {
     }
     svgText(obj = {}) {
         this.svgTextCss = { textAnchor: 'middle', dominantBaseline: 'middle' };
-        obj.css = Core.objCopy(obj.css, this.svgTextCss);
+        obj.css = { ...this.svgTextCss, ...obj.css };
         return this.core(obj, 'text');
     }
     br() { return this.build('br'); }
@@ -313,18 +313,18 @@ class Element extends Theme {
 
     responsive(element, fn) {
         this.responsiveMatrix.push([element, fn]);
-        Core.copyCss(fn(window.innerWidth), element);
+        element.css(fn(window.innerWidth));
         return element;
     }
 
     // Credit: grid and breakpoints follow Bootstrap 4 (https://getbootstrap.com), by Mark Otto, Jacob Thornton and
     // the Bootstrap contributors, MIT licence.
     row(obj = {}) {
-        obj.css = Core.objCopy(obj.css, { display: 'flex', flexWrap: 'wrap', margin: 0 });
+        obj.css = { display: 'flex', flexWrap: 'wrap', margin: 0, ...obj.css };
         return this.div(obj);
     }
     centeredRow(obj = {}) {
-        obj.css = Core.objCopy(obj.css, { justifyContent: 'center' });
+        obj.css = { justifyContent: 'center', ...obj.css };
         return this.row(obj);
     }
     col1(obj = {}) { return this.col(obj, 1); }
@@ -341,7 +341,7 @@ class Element extends Theme {
     col12(obj = {}) { return this.col(obj, 12); }
     col(obj, sizeInt) {
         let col = this.build('div');
-        Core.copyCss({ position: 'relative', width: '100%', margin: 0, padding: 0 }, col);
+        col.css({ position: 'relative', width: '100%', margin: 0, padding: 0 });
         Core.objCopy(obj, col);
         this.hover(col, obj?.hover);
         let ownMaxWidthBool = Boolean(obj?.css?.maxWidth);

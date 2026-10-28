@@ -24,18 +24,19 @@ Page.prototype.dropdown = function(
         ...this.dropdownThemeCss,
         ...obj.themeCss
     };
-    obj.css = Core.objCopy({
+    obj.css = {
+        ...obj.css,
         position: 'relative',
         zIndex: 2,
         backgroundColor: themeObj.listBack,
         display: 'none',
-        border: '1px solid ' + this.color4
-    }, obj.css);
+        border: `1px solid ${this.color4}`
+    };
     let listDiv = this.centeredRow({ css: obj.css });
     listDiv.btnDiv = listBtnDiv;
     listDiv.close = () => {
         listBtn.style.border = 'none';
-        listDiv.style.display = 'none';
+        listDiv.hide();
         listBtn.style.backgroundColor = themeObj.btnBack;
         openDropdownArr = openDropdownArr.filter((openDiv) => openDiv !== listDiv);
     };
@@ -59,7 +60,7 @@ Page.prototype.dropdown = function(
                 listDiv.close();
             } else {
                 listBtn.style.border = '1px solid ' + this.color0;
-                listDiv.style.display = 'flex';
+                listDiv.show('flex');
                 listBtn.style.backgroundColor = themeObj.btnOpenBack;
                 openDropdownArr.push(listDiv);
             }
@@ -91,8 +92,8 @@ Page.prototype.dropdown = function(
                 }
                 let filterOutBool = true;
                 if (filterOutObj) {
-                    for (let [keyStr, value] in filterOutObj) {
-                        if (optionObj[keyStr] !== value) {
+                    for (let keyStr in filterOutObj) {
+                        if (optionObj[keyStr] !== filterOutObj[keyStr]) {
                             filterOutBool = false;
                         }
                     }

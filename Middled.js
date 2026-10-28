@@ -36,7 +36,7 @@ class Middled extends Container {
         });
         backLink.dataset.back = 'true';
         let middledCol = this.middledCol;
-        Core.copyCss({ position: 'relative' }, middledCol);
+        middledCol.css({ position: 'relative' });
         middledCol.add(backLink);
     }
 

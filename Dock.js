@@ -57,8 +57,16 @@ Page.prototype.dockPanel = function(obj) {
         panelObj.openBool = openBool;
         sessionStorage.setItem(openKeyStr, openBool ? '1' : '0');
         panelObj.titleBtn.textContent = `${openBool ? '▾' : '▸'} ${panelObj.titleStr}`;
-        panelObj.bodyDiv.style.display = openBool ? 'block' : 'none';
-        panelObj.summaryEl.style.display = openBool && !obj.summaryOpenBool ? 'none' : 'block';
+        if (openBool) {
+            panelObj.bodyDiv.show('block');
+        } else {
+            panelObj.bodyDiv.hide();
+        }
+        if (openBool && !obj.summaryOpenBool) {
+            panelObj.summaryEl.hide();
+        } else {
+            panelObj.summaryEl.show('block');
+        }
         if (obj.hintStr) {
             panelObj.cornerLbl.textContent = openBool ? '' : obj.hintStr;
         }
@@ -135,20 +143,29 @@ Page.prototype.sideNav = function(obj = {}) {
         sessionStorage.setItem(openKeyStr, openBool ? '1' : '0');
         this.sideNavWidthInt = openBool ? widthInt : railInt;
         navObj.div.style.width = `${this.sideNavWidthInt}px`;
-        Core.copyCss({ paddingLeft: `${this.sideNavWidthInt + 28}px` }, this.containerEl);
+        this.containerEl.css({ paddingLeft: `${this.sideNavWidthInt + 28}px` });
         if (this.dockDiv) {
             this.dockDiv.style.left = `${this.sideNavWidthInt + 28}px`;
         }
         navObj.toggleBtn.textContent = openBool ? '\u2715' : '\u2630';
-        navObj.titleLbl.style.display = openBool ? 'block' : 'none';
+        if (openBool) {
+            navObj.titleLbl.show('block');
+        } else {
+            navObj.titleLbl.hide();
+        }
         navObj.headDiv.style.flexDirection = openBool ? 'row' : 'column';
-        Core.copyCss(
-            openBool ? { fontSize: '28px', width: '42px', height: '36px', padding: '0 0 4px 0' }
-                : { fontSize: '20px', width: '28px', height: '28px', padding: '0 0 3px 0' },
-            navObj.backBtn
-        );
-        navObj.railLbl.style.display = openBool ? 'none' : 'block';
-        navObj.bodyDiv.style.display = openBool ? 'block' : 'none';
+        navObj.backBtn.css(openBool ? { fontSize: '28px', width: '42px', height: '36px', padding: '0 0 4px 0' }
+                : { fontSize: '20px', width: '28px', height: '28px', padding: '0 0 3px 0' });
+        if (openBool) {
+            navObj.railLbl.hide();
+        } else {
+            navObj.railLbl.show('block');
+        }
+        if (openBool) {
+            navObj.bodyDiv.show('block');
+        } else {
+            navObj.bodyDiv.hide();
+        }
         obj.onToggleFn?.(openBool);
     };
     this.containerEl.add(navObj.div);

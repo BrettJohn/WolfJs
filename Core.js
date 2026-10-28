@@ -10,7 +10,9 @@ class Core {
             toObj = {};
         }
         for (let propStr in fromObj) {
-            toObj[propStr] = fromObj[propStr];
+            if (propStr !== 'css') {
+                toObj[propStr] = fromObj[propStr];
+            }
         }
         toObj['add'] = function (childEl) {
             toObj.appendChild(childEl);
@@ -107,3 +109,35 @@ class Core {
         return !this.isBlankObject(this.findObj(objArr, value, attributeStr));
     }
 }
+
+Element.prototype.css = function(cssObj) {
+    Core.copyCss(cssObj, this);
+    return this;
+};
+
+Element.prototype.show = function(displayStr) {
+    if (!Is.blank(displayStr)) {
+        this.style.display = displayStr;
+    } else if (this.style.display === 'none') {
+        this.style.display = this.shownDisplayStr ?? '';
+    }
+    return this;
+};
+
+Element.prototype.hide = function() {
+    if (this.style.display !== 'none') {
+        this.shownDisplayStr = this.style.display;
+    }
+    this.style.display = 'none';
+    return this;
+};
+
+Element.prototype.visible = function() {
+    this.style.visibility = 'visible';
+    return this;
+};
+
+Element.prototype.invisible = function() {
+    this.style.visibility = 'hidden';
+    return this;
+};

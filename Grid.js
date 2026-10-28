@@ -59,7 +59,7 @@ Page.prototype.dataGrid = async function(Operation, controllerStr, obj = {}) {
     let headingColor = themeObj.headColor;
 
     this.dataGridCss = { ...this.fullWidthCss, padding: '0% 7% 0% 7%' };
-    obj.css = Core.objCopy(obj.css, this.dataGridCss);
+    obj.css = { ...this.dataGridCss, ...obj.css };
     let grid = this.col12(obj);
     let resultObj = await backEnd({ Operation, Limit: 10, MinId: 0 });
     let objArr = resultObj.EntityArr;
@@ -74,7 +74,7 @@ Page.prototype.dataGrid = async function(Operation, controllerStr, obj = {}) {
 
     grid.styleList = (dropdown) => {
         dropdown.div.style.position = 'relative';
-        Core.copyCss({ ...themeObj.buttonCss, height: themeObj.controlHeight }, dropdown.btn);
+        dropdown.btn.css({ ...themeObj.buttonCss, height: themeObj.controlHeight });
         Object.assign(
             dropdown.listDiv.style,
             {
@@ -264,7 +264,7 @@ Page.prototype.dataGrid = async function(Operation, controllerStr, obj = {}) {
                     let boxShadowStr = i ? 'none' : `inset 4px 0 0 ${this.color2}`;
                     cellCss = { ...selectedCss, boxShadow: boxShadowStr };
                 }
-                Core.copyCss(cellCss, cellArr[i]);
+                cellArr[i].css(cellCss);
             }
         }
     };

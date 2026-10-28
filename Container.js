@@ -43,8 +43,8 @@ class Container extends Page {
         popupDiv.glow = (colorStr, swirlBool = false) => {
             let nearStr = `color-mix(in srgb, ${colorStr} 70%, transparent)`;
             let tintStr = `color-mix(in srgb, ${colorStr} 16%, transparent)`;
-            Core.copyCss({ borderColor: nearStr }, popupBodyEl);
-            Core.copyCss({ background: `radial-gradient(circle, ${tintStr}, rgba(0, 0, 0, 0.6) 70%)` }, popupDiv);
+            popupBodyEl.css({ borderColor: nearStr });
+            popupDiv.css({ background: `radial-gradient(circle, ${tintStr}, rgba(0, 0, 0, 0.6) 70%)` });
             this.glowEl(popupBodyEl, colorStr, swirlBool);
             return popupDiv;
         };
@@ -162,7 +162,7 @@ class Container extends Page {
 
     confirmBtn(obj) {
         this.pCss = { backgroundColor: this.color4, color: this.color1, height: '50px' };
-        obj.css = Core.objCopy(obj.css, this.pCss);
+        obj.css = { ...this.pCss, ...obj.css };
         let button = this.button(obj);
         button.dataset.default = 'true';
         button.addEventListener('mouseenter', () => this.glowEl(button, this.glowColor));

@@ -1,4 +1,4 @@
-class Page extends Element {
+class Page extends WolfElement {
     arrowPager(pagerEl, stepFn, defaultBool = false) {
         let pagerObj = { pagerEl, stepFn };
         if (defaultBool) {
@@ -135,10 +135,10 @@ class Page extends Element {
             document.body.add(this.toastDiv);
         }
         this.toastDiv.textContent = messageStr;
-        Core.copyCss({ opacity: 1, transform: 'translate(-50%, 0)' }, this.toastDiv);
+        this.toastDiv.css({ opacity: 1, transform: 'translate(-50%, 0)' });
         clearTimeout(this.toastTimerInt);
         this.toastTimerInt = setTimeout(
-            () => Core.copyCss({ opacity: 0, transform: 'translate(-50%, 20px)' }, this.toastDiv),
+            () => this.toastDiv.css({ opacity: 0, transform: 'translate(-50%, 20px)' }),
             3200
         );
     }

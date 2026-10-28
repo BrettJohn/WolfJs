@@ -13,7 +13,7 @@ served by nginx, lists the tags itself.
 |---|---|
 | `Theme.js` | Default colours and css objects, added to the page's `Base` class |
 | `Entity.js`, `Core.js`, `Is.js`, `Diff.js`, `Matrix.js`, `Timer.js` | Static helpers |
-| `Element.js` | Builders: `div()`, `a()`, `button()`, `markdown()`, rows and columns |
+| `WolfElement.js` | Builders: `div()`, `a()`, `button()`, `markdown()`, rows and columns |
 | `Page.js`, `Container.js`, `Middled.js`, `MiddledController.js` | Page classes, in that order: each extends the last |
 | `BackEnd.js` | `fetchApi()` and the loading overlay |
 | `Grid.js`, `Dropdown.js`, `Toggle.js`, `Upload.js`, `Dock.js`, `Scene.js`, `Math.js` | Extras on `Page.prototype` |
@@ -37,7 +37,7 @@ class Theme extends Base {
 </script>
 <script src="wolf/Entity.js"></script>
 <script src="wolf/Core.js"></script>
-<script src="wolf/Element.js"></script>
+<script src="wolf/WolfElement.js"></script>
 <script src="wolf/Page.js"></script>
 <script src="wolf/Container.js"></script>
 <script src="wolf/Middled.js"></script>

@@ -248,10 +248,7 @@ Page.prototype.math = function(texStr) {
             stackEl.add(this.span({ css: scriptCss }).add(renderFn(nodeObj.supObj)))
                 .add(this.span({ css: scriptCss }).add(renderFn(nodeObj.subObj)));
         } else {
-            Core.copyCss(
-                { display: 'inline-block', verticalAlign: nodeObj.supObj ? '0.55em' : '-0.3em', ...scriptCss },
-                stackEl
-            );
+            stackEl.css({ display: 'inline-block', verticalAlign: nodeObj.supObj ? '0.55em' : '-0.3em', ...scriptCss });
             stackEl.add(renderFn(nodeObj.supObj ?? nodeObj.subObj));
         }
         let gapBool = ['Operator', 'Function'].includes(baseObj.kindStr);
@@ -536,7 +533,7 @@ Page.prototype.figure = function(nameStr, boldArr) {
             attr: { d: sideObj.dStr },
             css: { strokeWidth: widthStr, opacity: opacityFlt }
         });
-        Core.copyCss(sideObj.lineCss, pathEl);
+        pathEl.css(sideObj.lineCss);
         svgEl.add(pathEl);
         if (sideStr) {
             svgEl.add(this.svgText({
@@ -564,7 +561,7 @@ Page.prototype.figure = function(nameStr, boldArr) {
 Page.prototype.paragraph = function(paragraphStr) {
     let paragraphEl = this.p({ css: { fontSize: '14px', margin: '4px 0 8px 0', lineHeight: 1.4 } });
     if (/^\$\$[\s\S]*\$\$$/.test(paragraphStr)) {
-        Core.copyCss({ textAlign: 'center', margin: '10px 0' }, paragraphEl);
+        paragraphEl.css({ textAlign: 'center', margin: '10px 0' });
         paragraphEl.add(this.math(paragraphStr.slice(2, -2)));
     } else if (paragraphStr.startsWith('△')) {
         let wordArr = paragraphStr.split(' ');
