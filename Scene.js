@@ -48,13 +48,11 @@ Page.prototype.scene = function(obj) {
             }
         });
         let nameArr = sceneObj.viewArr.map((viewObj) => viewObj.nameStr);
-        sceneObj.chipArr = [...nameArr, ...nameArr.length > 1 ? ['All'] : []].map(
-            (nameStr, i) => this.span({
-                textContent: nameStr,
-                onclick: () => sceneObj.setView(i),
-                css: { ...chipCss, cursor: 'pointer', backgroundColor: 'rgba(8, 10, 14, 0.85)' }
-            })
-        );
+        sceneObj.chipArr = [...nameArr, ...nameArr.length > 1 ? ['All'] : []].map((nameStr, i) => this.span({
+            textContent: nameStr,
+            onclick: () => sceneObj.setView(i),
+            css: { ...chipCss, cursor: 'pointer', backgroundColor: 'rgba(8, 10, 14, 0.85)' }
+        }));
         sceneObj.chipArr.forEach((chipEl) => selectorDiv.add(chipEl));
         sceneObj.div.add(selectorDiv);
 

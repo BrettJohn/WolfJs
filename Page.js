@@ -198,10 +198,9 @@ class Page extends Element {
     }
 
     labelCol(obj) {
-        return this.responsive(
-            this.col4(obj),
-            (widthInt) => ({ textAlign: widthInt >= this.breakpointObj.md ? 'right' : 'left' })
-        );
+        return this.responsive(this.col4(obj), (widthInt) => ({
+            textAlign: widthInt >= this.breakpointObj.md ? 'right' : 'left'
+        }));
     }
 
     infoRow(html, infoEl, rowEl = null) {

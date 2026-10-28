@@ -107,38 +107,34 @@ Page.prototype.dropdown = function(
                 if (sameBool) {
                     ddObj.optionObj = optionObj;
                 }
-                listDiv.add(this[optionColStr]({ css: { padding: 0, margin:0 }})
-                    .add(
-                        this.button({
-                            textContent: optionObj.Name,
-                            css: {
-                                height: '21px',
-                                backgroundColor: themeObj.optionBack,
-                                color: themeObj.optionColor,
-                                padding: 0,
-                                margin: '0 1px 0 0',
-                                border: sameBool ? themeObj.optionSelectedBorder : 'none',
-                                fontWeight: 'normal',
-                                fontSize: '12px',
-                                borderRadius: '0px',
-                                ...this.ellipsesCss,
-                                ...optionCss
-                            },
-                            hover: {
-                                backgroundColor: this.color4,
-                                color: this.color1
-                            },
-                            onclick: () => {
-                                ddObj.setSelected(optionObj.Id);
-                                listDiv.close();
-                                listBtn.textContent = optionObj.Name + triangleDownStr;
-                                if (onchangeFn != null) {
-                                    onchangeFn();
-                                }
-                            }
-                        })
-                    )
-                );
+                listDiv.add(this[optionColStr]({ css: { padding: 0, margin:0 }}).add(this.button({
+                    textContent: optionObj.Name,
+                    css: {
+                        height: '21px',
+                        backgroundColor: themeObj.optionBack,
+                        color: themeObj.optionColor,
+                        padding: 0,
+                        margin: '0 1px 0 0',
+                        border: sameBool ? themeObj.optionSelectedBorder : 'none',
+                        fontWeight: 'normal',
+                        fontSize: '12px',
+                        borderRadius: '0px',
+                        ...this.ellipsesCss,
+                        ...optionCss
+                    },
+                    hover: {
+                        backgroundColor: this.color4,
+                        color: this.color1
+                    },
+                    onclick: () => {
+                        ddObj.setSelected(optionObj.Id);
+                        listDiv.close();
+                        listBtn.textContent = optionObj.Name + triangleDownStr;
+                        if (onchangeFn != null) {
+                            onchangeFn();
+                        }
+                    }
+                })));
             }
         }
     };
