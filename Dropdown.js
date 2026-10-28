@@ -91,8 +91,8 @@ Page.prototype.dropdown = function(
                 }
                 let filterOutBool = true;
                 if (filterOutObj) {
-                    for (let [keyStr, value] in filterOutObj) {
-                        if (optionObj[keyStr] !== value) {
+                    for (let keyStr in filterOutObj) {
+                        if (optionObj[keyStr] !== filterOutObj[keyStr]) {
                             filterOutBool = false;
                         }
                     }
