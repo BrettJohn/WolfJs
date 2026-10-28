@@ -47,8 +47,12 @@ class Matrix {
 
     static ortho(halfWidthFlt, halfHeightFlt, nearFlt, farFlt) {
         let depthFlt = farFlt - nearFlt;
-        return new Float32Array([1 / halfWidthFlt, 0, 0, 0, 0, 1 / halfHeightFlt, 0, 0, 0, 0, -2 / depthFlt, 0,
-            0, 0, -(farFlt + nearFlt) / depthFlt, 1]);
+        return new Float32Array([
+            1 / halfWidthFlt, 0, 0, 0,
+            0, 1 / halfHeightFlt, 0, 0,
+            0, 0, -2 / depthFlt, 0,
+            0, 0, -(farFlt + nearFlt) / depthFlt, 1
+        ]);
     }
 
     static lookAt(eyeArr, targetArr, upArr) {
@@ -56,14 +60,20 @@ class Matrix {
         let xArr = Matrix.normalize(Matrix.cross(upArr, zArr));
         let yArr = Matrix.cross(zArr, xArr);
         let dotFn = (axisArr) => -axisArr.reduce((sumFlt, valueFlt, i) => sumFlt + valueFlt * eyeArr[i], 0);
-        return new Float32Array([xArr[0], yArr[0], zArr[0], 0, xArr[1], yArr[1], zArr[1], 0,
-            xArr[2], yArr[2], zArr[2], 0, dotFn(xArr), dotFn(yArr), dotFn(zArr), 1]);
+        return new Float32Array([
+            xArr[0], yArr[0], zArr[0], 0,
+            xArr[1], yArr[1], zArr[1], 0,
+            xArr[2], yArr[2], zArr[2], 0,
+            dotFn(xArr), dotFn(yArr), dotFn(zArr), 1
+        ]);
     }
 
     static cross(leftArr, rightArr) {
-        return [leftArr[1] * rightArr[2] - leftArr[2] * rightArr[1],
+        return [
+            leftArr[1] * rightArr[2] - leftArr[2] * rightArr[1],
             leftArr[2] * rightArr[0] - leftArr[0] * rightArr[2],
-            leftArr[0] * rightArr[1] - leftArr[1] * rightArr[0]];
+            leftArr[0] * rightArr[1] - leftArr[1] * rightArr[0]
+        ];
     }
 
     static normalize(vectorArr) {

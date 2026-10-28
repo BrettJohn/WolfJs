@@ -23,7 +23,10 @@ class Core {
         if (fromObj['css']) {
             Core.copyCss(fromObj['css'], toObj);
         }
-        Object.entries(fromObj['attr'] ?? {}).forEach(([keyStr, value]) => toObj.setAttribute(keyStr, value));
+        let attrObj = fromObj['attr'] ?? {};
+        for (let keyStr in attrObj) {
+            toObj.setAttribute(keyStr, attrObj[keyStr]);
+        }
         return toObj;
     }
     static findObj(objArr, value, attributeStr = 'Id') {
@@ -37,8 +40,14 @@ class Core {
     }
     static loadScript(srcStr) {
         Core.scriptPromiseObj ??= {};
-        Core.scriptPromiseObj[srcStr] ??= new Promise((resolveFn, rejectFn) => document.head.append(
-            Object.assign(document.createElement('script'), { src: srcStr, onload: resolveFn, onerror: rejectFn })));
+        Core.scriptPromiseObj[srcStr] ??= new Promise(
+            (resolveFn, rejectFn) => document.head.append(
+                Object.assign(
+                    document.createElement('script'),
+                    { src: srcStr, onload: resolveFn, onerror: rejectFn }
+                )
+            )
+        );
         return Core.scriptPromiseObj[srcStr];
     }
     static copyCss(css, toEl) {

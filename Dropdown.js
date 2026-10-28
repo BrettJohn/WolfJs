@@ -13,9 +13,17 @@ Page.prototype.dropdown = function(
     let ddObj = {};
     let triangleDownStr = ' \u25BE';
     let listBtnDiv = this.div();
-    let themeObj = { btnBack: this.color9, btnOpenBack: this.color11, btnColor: this.color7,
-        listBack: this.color9, optionBack: this.color11, optionColor: this.color7,
-        optionSelectedBorder: '1px solid ' + this.color2, ...this.dropdownThemeCss, ...obj.themeCss };
+    let themeObj = {
+        btnBack: this.color9,
+        btnOpenBack: this.color11,
+        btnColor: this.color7,
+        listBack: this.color9,
+        optionBack: this.color11,
+        optionColor: this.color7,
+        optionSelectedBorder: '1px solid ' + this.color2,
+        ...this.dropdownThemeCss,
+        ...obj.themeCss
+    };
     obj.css = Core.objCopy({
         position: 'relative',
         zIndex: 2,
@@ -34,7 +42,9 @@ Page.prototype.dropdown = function(
 
     let optionColStr = obj.stacked ? 'col12' : 'col3';
     let optionCss = obj.stacked ? { height: '34px', fontSize: '16px', textAlign: 'left', padding: '0 12px' } : {};
-    let listBtn = this.button({ html: '--Select--' + triangleDownStr, css: {
+    let listBtn = this.button({
+        html: '--Select--' + triangleDownStr,
+        css: {
             color: themeObj.btnColor,
             padding: 0,
             margin: 0,
@@ -98,7 +108,8 @@ Page.prototype.dropdown = function(
                     ddObj.optionObj = optionObj;
                 }
                 listDiv.add(this[optionColStr]({ css: { padding: 0, margin:0 }}).add(this.button({
-                    textContent: optionObj.Name, css: {
+                    textContent: optionObj.Name,
+                    css: {
                         height: '21px',
                         backgroundColor: themeObj.optionBack,
                         color: themeObj.optionColor,

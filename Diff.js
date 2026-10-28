@@ -12,13 +12,15 @@ class Diff {
         let oldInt = 0;
         let newInt = 0;
         while (oldInt < oldArr.length || newInt < newArr.length) {
-            if (oldInt < oldArr.length && newInt < newArr.length && oldArr[oldInt] === newArr[newInt]) {
-                opMatrix.push(['same', oldArr[oldInt++], newArr[newInt++]]);
-            } else if (newInt >= newArr.length
-                || (oldInt < oldArr.length && lengthMatrix[oldInt + 1][newInt] >= lengthMatrix[oldInt][newInt + 1])) {
-                opMatrix.push(['remove', oldArr[oldInt++], '']);
+            let oldLeftBool = oldInt < oldArr.length;
+            let newLeftBool = newInt < newArr.length;
+            let dropOldBool = oldLeftBool && lengthMatrix[oldInt + 1][newInt] >= lengthMatrix[oldInt][newInt + 1];
+            if (oldLeftBool && newLeftBool && oldArr[oldInt] === newArr[newInt]) {
+                opMatrix.push(['Same', oldArr[oldInt++], newArr[newInt++]]);
+            } else if (!newLeftBool || dropOldBool) {
+                opMatrix.push(['Remove', oldArr[oldInt++], '']);
             } else {
-                opMatrix.push(['add', '', newArr[newInt++]]);
+                opMatrix.push(['Add', '', newArr[newInt++]]);
             }
         }
         return opMatrix;
@@ -32,41 +34,65 @@ class Diff {
             for (let indexInt = 0; indexInt < Math.max(removeArr.length, addArr.length); indexInt++) {
                 let removeStr = removeArr[indexInt];
                 let addStr = addArr[indexInt];
-                let kindStr = removeStr === undefined ? 'add' : addStr === undefined ? 'remove' : 'change';
+                let kindStr = 'Change';
+                if (removeStr === undefined) {
+                    kindStr = 'Add';
+                } else if (addStr === undefined) {
+                    kindStr = 'Remove';
+                }
                 lineMatrix.push([kindStr, removeStr ?? '', addStr ?? '']);
             }
             removeArr = [];
             addArr = [];
         };
-        Diff.opMatrix(String(oldStr ?? '').split('\n'), String(newStr ?? '').split('\n'))
-            .forEach(([kindStr, oldLineStr, newLineStr]) => {
-                if (kindStr === 'remove') {
-                    removeArr.push(oldLineStr);
-                } else if (kindStr === 'add') {
-                    addArr.push(newLineStr);
-                } else {
-                    flushFn();
-                    lineMatrix.push(['same', oldLineStr, newLineStr]);
-                }
-            });
+        let opMatrix = Diff.opMatrix(String(oldStr ?? '').split('\n'), String(newStr ?? '').split('\n'));
+        for (let opArr of opMatrix) {
+            let kindStr = opArr[0];
+            let oldLineStr = opArr[1];
+            let newLineStr = opArr[2];
+            if (kindStr === 'Remove') {
+                removeArr.push(oldLineStr);
+            } else if (kindStr === 'Add') {
+                addArr.push(newLineStr);
+            } else {
+                flushFn();
+                lineMatrix.push(['Same', oldLineStr, newLineStr]);
+            }
+        }
         flushFn();
         return lineMatrix;
     }
 }
 
 Page.prototype.diffCssSet = function() {
-    this.diffViewCss = { border: '1px solid rgba(127, 127, 127, 0.3)', borderRadius: '8px', overflow: 'hidden',
-        textAlign: 'left', fontSize: '15px', lineHeight: 1.6 };
+    this.diffViewCss = {
+        border: '1px solid rgba(127, 127, 127, 0.3)',
+        borderRadius: '8px',
+        overflow: 'hidden',
+        textAlign: 'left',
+        fontSize: '15px',
+        lineHeight: 1.6
+    };
     this.diffMonoCss = { ...this.diffViewCss, fontFamily: 'monospace', fontSize: '13px' };
     this.diffRowCss = { display: 'grid', gridTemplateColumns: '1fr 1fr' };
-    this.diffCellCss = { padding: '2px 10px', whiteSpace: 'pre-wrap', wordBreak: 'break-word', minHeight: '1.6em',
-        borderRight: '1px solid rgba(127, 127, 127, 0.3)' };
+    this.diffCellCss = {
+        padding: '2px 10px',
+        whiteSpace: 'pre-wrap',
+        wordBreak: 'break-word',
+        minHeight: '1.6em',
+        borderRight: '1px solid rgba(127, 127, 127, 0.3)'
+    };
     this.diffRemoveCss = { ...this.diffCellCss, backgroundColor: 'rgba(255, 70, 70, 0.14)' };
     this.diffAddCss = { ...this.diffCellCss, backgroundColor: 'rgba(40, 200, 90, 0.14)' };
     this.diffRemoveWordCss = { backgroundColor: 'rgba(255, 70, 70, 0.45)', borderRadius: '3px' };
     this.diffAddWordCss = { backgroundColor: 'rgba(40, 200, 90, 0.45)', borderRadius: '3px' };
-    this.diffFoldCss = { padding: '4px 10px', cursor: 'pointer', opacity: 0.6, fontSize: '13px',
-        backgroundColor: 'rgba(127, 127, 127, 0.08)' };
+    this.diffFoldCss = {
+        padding: '4px 10px',
+        cursor: 'pointer',
+        opacity: 0.6,
+        fontSize: '13px',
+        backgroundColor: 'rgba(127, 127, 127, 0.08)'
+    };
 };
 
 Page.prototype.diffView = function(oldStr, newStr, monoBool = false) {
@@ -77,25 +103,29 @@ Page.prototype.diffView = function(oldStr, newStr, monoBool = false) {
     let cellFn = (textStr, cellCss) => this.div({ textContent: textStr, css: cellCss });
     let wordCellFn = (opMatrix, kindStr, cellCss, wordCss) => {
         let cellEl = this.div({ css: cellCss });
-        opMatrix.forEach(([opStr, oldWordStr, newWordStr]) => {
-            let wordStr = kindStr === 'remove' ? oldWordStr : newWordStr;
-            if (opStr === 'same') {
+        for (let opArr of opMatrix) {
+            let opStr = opArr[0];
+            let wordStr = kindStr === 'Remove' ? opArr[1] : opArr[2];
+            if (opStr === 'Same') {
                 cellEl.add(this.text(wordStr));
             } else if (opStr === kindStr) {
                 cellEl.add(this.span({ textContent: wordStr, css: wordCss }));
             }
-        });
+        }
         return cellEl;
     };
-    let rowFn = ([kindStr, oldLineStr, newLineStr]) => {
+    let rowFn = (lineArr) => {
+        let kindStr = lineArr[0];
+        let oldLineStr = lineArr[1];
+        let newLineStr = lineArr[2];
         let rowEl = this.div({ css: this.diffRowCss });
-        if (kindStr === 'change') {
+        if (kindStr === 'Change') {
             let wordMatrix = Diff.opMatrix(oldLineStr.split(/(\s+)/), newLineStr.split(/(\s+)/));
-            return rowEl.add(wordCellFn(wordMatrix, 'remove', this.diffRemoveCss, this.diffRemoveWordCss))
-                .add(wordCellFn(wordMatrix, 'add', this.diffAddCss, this.diffAddWordCss));
+            return rowEl.add(wordCellFn(wordMatrix, 'Remove', this.diffRemoveCss, this.diffRemoveWordCss))
+                .add(wordCellFn(wordMatrix, 'Add', this.diffAddCss, this.diffAddWordCss));
         }
-        let leftCss = kindStr === 'remove' ? this.diffRemoveCss : this.diffCellCss;
-        let rightCss = kindStr === 'add' ? this.diffAddCss : this.diffCellCss;
+        let leftCss = kindStr === 'Remove' ? this.diffRemoveCss : this.diffCellCss;
+        let rightCss = kindStr === 'Add' ? this.diffAddCss : this.diffCellCss;
         return rowEl.add(cellFn(oldLineStr, leftCss)).add(cellFn(newLineStr, rightCss));
     };
 
@@ -108,15 +138,18 @@ Page.prototype.diffView = function(oldStr, newStr, monoBool = false) {
         } else {
             let hiddenArr = sameArr.slice(contextInt, -contextInt);
             sameArr.slice(0, contextInt).forEach((lineArr) => viewEl.add(rowFn(lineArr)));
-            let foldEl = this.div({ textContent: `⋯ ${hiddenArr.length} unchanged lines`, css: this.diffFoldCss,
-                onclick: () => foldEl.replaceWith(...hiddenArr.map(rowFn)) });
+            let foldEl = this.div({
+                textContent: `⋯ ${hiddenArr.length} unchanged lines`,
+                css: this.diffFoldCss,
+                onclick: () => foldEl.replaceWith(...hiddenArr.map(rowFn))
+            });
             viewEl.add(foldEl);
             sameArr.slice(-contextInt).forEach((lineArr) => viewEl.add(rowFn(lineArr)));
         }
         sameArr = [];
     };
     lineMatrix.forEach((lineArr) => {
-        if (lineArr[0] === 'same') {
+        if (lineArr[0] === 'Same') {
             sameArr.push(lineArr);
             return;
         }

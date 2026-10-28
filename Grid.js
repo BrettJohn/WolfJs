@@ -1,19 +1,43 @@
 Page.prototype.dataGrid = async function(Operation, controllerStr, obj = {}) {
-    let themeObj = { controlsColor: this.color1, controlsBack: 'rgba(0,0,0,0.75)',
-        controlsDivider: '1px solid rgba(255,255,255,0.12)', rowBack: 'rgba(0,0,0,0.6)', rowColor: this.color1,
-        headBack: 'rgba(0,0,0,0.85)', headColor: 'rgba(255,255,255,0.75)', headBorder: 'none', radius: '6px',
-        controlsRadius: '5px', border: '1px solid rgba(255,255,255,0.14)', shadow: '0 10px 30px rgba(0,0,0,0.6)',
-        hoverBack: `color-mix(in srgb, ${this.color2} 25%, transparent)`, hoverColor: '#fff', controlHeight: '34px',
-        ...this.gridThemeCss };
+    let themeObj = {
+        controlsColor: this.color1,
+        controlsBack: 'rgba(0,0,0,0.75)',
+        controlsDivider: '1px solid rgba(255,255,255,0.12)',
+        rowBack: 'rgba(0,0,0,0.6)',
+        rowColor: this.color1,
+        headBack: 'rgba(0,0,0,0.85)',
+        headColor: 'rgba(255,255,255,0.75)',
+        headBorder: 'none',
+        radius: '6px',
+        controlsRadius: '5px',
+        border: '1px solid rgba(255,255,255,0.14)',
+        shadow: '0 10px 30px rgba(0,0,0,0.6)',
+        hoverBack: `color-mix(in srgb, ${this.color2} 25%, transparent)`,
+        hoverColor: '#fff',
+        controlHeight: '34px',
+        ...this.gridThemeCss
+    };
     themeObj.controlCss = { height: themeObj.controlHeight, margin: 0, ...this.gridThemeCss?.controlCss };
     themeObj.buttonCss = { ...themeObj.controlCss, ...this.gridThemeCss?.buttonCss };
-    themeObj.headCss = { fontSize: '16px', letterSpacing: '1px', textTransform: 'uppercase', padding: '14px 8px',
-        borderBottom: '2px solid ' + this.color2, ...this.gridThemeCss?.headCss };
-    themeObj.cellCss = { border: 'none', borderBottom: '1px solid rgba(255,255,255,0.07)', padding: '14px 8px',
-        fontSize: '19px', ...this.gridThemeCss?.cellCss };
+    themeObj.headCss = {
+        fontSize: '16px',
+        letterSpacing: '1px',
+        textTransform: 'uppercase',
+        padding: '14px 8px',
+        borderBottom: '2px solid ' + this.color2,
+        ...this.gridThemeCss?.headCss
+    };
+    themeObj.cellCss = {
+        border: 'none',
+        borderBottom: '1px solid rgba(255,255,255,0.07)',
+        padding: '14px 8px',
+        fontSize: '19px',
+        ...this.gridThemeCss?.cellCss
+    };
     if (!this.dataGridCssAddedBool) {
         this.dataGridCssAddedBool = true;
-        this.addCss(`
+        this.addCss(
+            `
             .data-grid-wrap { border: ${themeObj.border}; border-radius: ${themeObj.radius}; overflow-x: auto;
                 box-shadow: ${themeObj.shadow}; }
             .data-grid { border-collapse: separate; border-spacing: 0; }
@@ -23,7 +47,8 @@ Page.prototype.dataGrid = async function(Operation, controllerStr, obj = {}) {
             .data-grid tr.locked td { opacity: 0.55; }
             .data-grid tr:not(.locked):hover td { background-color: ${themeObj.hoverBack};
                 color: ${themeObj.hoverColor}; }
-        `);
+        `
+        );
     }
     let controlsColor = themeObj.controlsColor;
     let controlsBackgroundColor = themeObj.controlsBack;
@@ -50,8 +75,17 @@ Page.prototype.dataGrid = async function(Operation, controllerStr, obj = {}) {
     grid.styleList = (dropdown) => {
         dropdown.div.style.position = 'relative';
         Core.copyCss({ ...themeObj.buttonCss, height: themeObj.controlHeight }, dropdown.btn);
-        Object.assign(dropdown.listDiv.style, { position: 'absolute', width: '100%', maxHeight: '320px',
-            overflowY: 'auto', borderRadius: '5px', boxShadow: '0 8px 24px rgba(0, 0, 0, 0.5)' });
+        Object.assign(
+            dropdown.listDiv.style,
+            {
+                position: 'absolute',
+                width: '100%',
+                maxHeight: '320px',
+                overflowY: 'auto',
+                borderRadius: '5px',
+                boxShadow: '0 8px 24px rgba(0, 0, 0, 0.5)'
+            }
+        );
     };
 
     let perPageSelect = this.dropdown({ stacked: true }, optionArr, async () => {
@@ -77,32 +111,52 @@ Page.prototype.dataGrid = async function(Operation, controllerStr, obj = {}) {
             .add(this.row()
                 .add(filterSelect)
                 .add(this.col4({ css: gapCss }).add(filterInput))
-                .add(this.col2({ css: gapCss }).add(this.button({ title: 'Apply filter', css: themeObj.buttonCss,
-                    onclick: async () => { await grid.applyFilter(); } }).add(this.icon('search'))))
-                .add(this.col2().add(
-                    this.button({ title: 'Clear filter', css: themeObj.buttonCss, onclick: async () => {
-                    filterInput.value = '';
-                    await grid.callBackend(null, null, [])
-                } }).add(this.icon('refresh'))))
+                .add(this.col2({ css: gapCss })
+                    .add(this.button({
+                        title: 'Apply filter',
+                        css: themeObj.buttonCss,
+                        onclick: async () => { await grid.applyFilter(); }
+                    })
+                        .add(this.icon('search'))
+                    )
+                )
+                .add(this.col2()
+                    .add(this.button({
+                        title: 'Clear filter',
+                        css: themeObj.buttonCss,
+                        onclick: async () => {
+                            filterInput.value = '';
+                            await grid.callBackend(null, null, [])
+                        }
+                    })
+                        .add(this.icon('refresh'))
+                    )
+                )
             )
         )
-        .add(this.col6({ css: { backgroundColor: controlsBackgroundColor, borderRadius: themeObj.controlsRadius,
-            alignSelf: 'center' } })
-            .add(
-                this.row()
+        .add(this.col6({
+            css: {
+                backgroundColor: controlsBackgroundColor,
+                borderRadius: themeObj.controlsRadius,
+                alignSelf: 'center'
+            }
+        })
+            .add(this.row()
                 .add(this.col3({
                     css: { padding: '0 0 0 5px', ...this.centerTextCss, borderRight: borderRightStr, ...rowCss }
-                }).add(
-                    this.label({ css: { color: controlsColor, fontSize: '12px', whiteSpace: 'nowrap' } })
+                })
+                    .add(this.label({ css: { color: controlsColor, fontSize: '12px', whiteSpace: 'nowrap' } })
                         .add(grid.totalSpan = this.span({ textContent: totalInt, css: { fontWeight: 'bold' } }))
                         .add(this.span({ textContent: ' results' }))
                     )
                 )
                 .add(this.col6({ css: { ...this.centerTextCss, borderRight: borderRightStr, ...rowCss } })
-                    .add(pageSelect))
+                    .add(pageSelect)
+                )
                 .add(this.col3({ css: this.centerTextCss }).add(perPageSelect.div))
+            )
         )
-    ));
+    );
 
     grid.filterObj = {};
     grid.callBackend = async (Limit = null, i = null, Filter = null) => {
@@ -131,7 +185,9 @@ Page.prototype.dataGrid = async function(Operation, controllerStr, obj = {}) {
         let paginationInt = Math.ceil(totalInt / perPageInt);
         grid.lastPageInt = paginationInt;
         pageSelect.innerHTML = '';
-        pageSelect.add(this.a({ html: '&#9665', css: { paddingRight: '5px'},
+        pageSelect.add(this.a({
+            html: '&#9665',
+            css: { paddingRight: '5px'},
             onclick: async () => {
                 let i = currentPageInt === 1 ? paginationInt : currentPageInt - 1;
                 await grid.setSelect(i);
@@ -141,21 +197,28 @@ Page.prototype.dataGrid = async function(Operation, controllerStr, obj = {}) {
         let controlMatrix = [];
         grid.setSelect = async (i) => {
             await grid.callBackend(perPageSelect.selectedItem, i);
-            controlMatrix.forEach(([pageInt, controlEl]) => {
+            for (let pageControlArr of controlMatrix) {
+                let pageInt = pageControlArr[0];
+                let controlEl = pageControlArr[1];
                 controlEl.style.color = pageInt === currentPageInt ? pageSelectActiveColor : pageSelectColor;
-            });
+            }
         };
-        for (let i = Math.max(1, currentPageInt - 5);
-             i <= (currentPageInt + 5 > paginationInt ? paginationInt : currentPageInt + 5);
-             i++) {
-            let a = this.a({ html: i, css: { paddingRight: '5px', color: pageSelectColor },
+        let firstPageInt = Math.max(1, currentPageInt - 5);
+        let lastPageInt = currentPageInt + 5 > paginationInt ? paginationInt : currentPageInt + 5;
+        for (let i = firstPageInt; i <= lastPageInt; i++) {
+            let a = this.a({
+                html: i,
+                css: { paddingRight: '5px', color: pageSelectColor },
                 onclick: async () => {
                     await grid.setSelect(i);
-            } });
+                }
+            });
             controlMatrix.push([i, a]);
             pageSelect.add(a);
         }
-        pageSelect.add(this.a({ html: '&#9655', css: { paddingRight: '5px' },
+        pageSelect.add(this.a({
+            html: '&#9655',
+            css: { paddingRight: '5px' },
             onclick: async () => {
                 let i = currentPageInt === paginationInt ? 1 : currentPageInt + 1;
                 await grid.setSelect(i);
@@ -167,8 +230,12 @@ Page.prototype.dataGrid = async function(Operation, controllerStr, obj = {}) {
     };
 
     document.addEventListener('keydown', (event) => {
-        let pageInt = { ArrowLeft: currentPageInt - 1, ArrowRight: currentPageInt + 1, Home: 1,
-            End: grid.lastPageInt }[event.key];
+        let pageInt = {
+            ArrowLeft: currentPageInt - 1,
+            ArrowRight: currentPageInt + 1,
+            Home: 1,
+            End: grid.lastPageInt
+        }[event.key];
         let typingBool = event.target.matches('input, textarea, select');
         let dropdownBool = typeof arrOpenDropdown !== 'undefined' && arrOpenDropdown.length;
         let busyBool = event.defaultPrevented || this.popupArr?.length || typingBool || dropdownBool;
@@ -182,11 +249,24 @@ Page.prototype.dataGrid = async function(Operation, controllerStr, obj = {}) {
     grid.selectedId = obj.selectedId;
     grid.select = (idStr) => {
         grid.selectedId = idStr;
-        let selectedCss = { backgroundColor: `color-mix(in srgb, ${this.color2} 30%, transparent)`,
-            color: this.color1 };
-        Object.entries(grid.rowObj).forEach(([rowIdStr, tr]) => [...tr.children].forEach((td, i) =>
-            Core.copyCss(rowIdStr === String(idStr) ? { ...selectedCss, boxShadow: i ? 'none'
-                : `inset 4px 0 0 ${this.color2}` } : { backgroundColor: '', color: '', boxShadow: 'none' }, td)));
+        let selectedCss = {
+            backgroundColor: `color-mix(in srgb, ${this.color2} 30%, transparent)`,
+            color: this.color1
+        };
+        let rowObj = grid.rowObj;
+        for (let rowIdStr in rowObj) {
+            let tr = rowObj[rowIdStr];
+            let selectedBool = rowIdStr === String(idStr);
+            let cellArr = [...tr.children];
+            for (let i = 0; i < cellArr.length; i++) {
+                let cellCss = { backgroundColor: '', color: '', boxShadow: 'none' };
+                if (selectedBool) {
+                    let boxShadowStr = i ? 'none' : `inset 4px 0 0 ${this.color2}`;
+                    cellCss = { ...selectedCss, boxShadow: boxShadowStr };
+                }
+                Core.copyCss(cellCss, cellArr[i]);
+            }
+        }
     };
     grid.setData = (objArr) => {
         grid.rowObj = {};
@@ -196,7 +276,8 @@ Page.prototype.dataGrid = async function(Operation, controllerStr, obj = {}) {
             backgroundColor: headingBackgroundColor,
             color: headingColor,
             padding: '5px',
-            fontWeight: 'normal', ...this.centerTextCss,
+            fontWeight: 'normal',
+            ...this.centerTextCss,
             border: themeObj.headBorder,
             ...themeObj.headCss
         };
@@ -235,8 +316,10 @@ Page.prototype.dataGrid = async function(Operation, controllerStr, obj = {}) {
         let numInt = 0;
         let countInt = 0;
         let selectedFilterStr = grid.filterDropdown.selectedItem;
-        grid.filterDropdown = this.dropdown({ stacked: true },
-            Object.keys(firstObj).filter((propStr) => !hiddenArr.includes(propStr)), () => {}
+        grid.filterDropdown = this.dropdown(
+            { stacked: true },
+            Object.keys(firstObj).filter((propStr) => !hiddenArr.includes(propStr)),
+            () => {}
         );
         grid.styleList(grid.filterDropdown);
         if (selectedFilterStr != null) {
@@ -246,8 +329,10 @@ Page.prototype.dataGrid = async function(Operation, controllerStr, obj = {}) {
         filterSelect.add(grid.filterDropdown.div);
         objArr.forEach((entityObj) => {
             let borderRadiusObj = {};
-            let tr = this.tr({ lift: entityObj.EditableBool !== false,
-                css: { backgroundColor: backgroundColor, color: themeObj.rowColor, position: 'relative' } });
+            let tr = this.tr({
+                lift: entityObj.EditableBool !== false,
+                css: { backgroundColor: backgroundColor, color: themeObj.rowColor, position: 'relative' }
+            });
             if (entityObj.EditableBool === false) {
                 tr.className = 'locked';
             } else {
@@ -283,8 +368,12 @@ Page.prototype.dataGrid = async function(Operation, controllerStr, obj = {}) {
 
                     let td = this.td({
                         textContent: value ?? '',
-                        css: { padding: '8px', ...this.centerTextCss,
-                            border: '1px solid ' + backgroundColor, ...themeObj.cellCss, ...borderRadiusObj
+                        css: {
+                            padding: '8px',
+                            ...this.centerTextCss,
+                            border: '1px solid ' + backgroundColor,
+                            ...themeObj.cellCss,
+                            ...borderRadiusObj
                         }
                     });
                     tr.add(td);

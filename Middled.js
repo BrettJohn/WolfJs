@@ -10,18 +10,30 @@ class Middled extends Container {
         this.containerEl.add(this.centeredRow().add(this.middledCol));
         this.addEnterKey(() => this.complete());
         document.addEventListener('keydown', (event) => {
-            if (event.key === 'Escape' && !event.defaultPrevented && !this.popupArr?.length
-                && !(typeof openDropdownArr !== 'undefined' && openDropdownArr.length)) {
+            let dropdownOpenBool = typeof openDropdownArr !== 'undefined' && openDropdownArr.length;
+            if (event.key === 'Escape' && !event.defaultPrevented && !this.popupArr?.length && !dropdownOpenBool) {
                 Core.goto(this.doneUrl?.() ?? 'Index.php');
             }
         });
     }
 
     cornerBackLink(hrefStr, titleStr) {
-        let backLink = this.a({ html: '\u2190', href: hrefStr, title: titleStr, ariaLabel: titleStr,
-            css: { ...this.backArrowCss(), position: 'absolute', top: '12px', left: '12px', width: '36px',
-                height: '36px', fontSize: '22px' },
-            hover: this.backArrowHoverCss() });
+        let backLink = this.a({
+            html: '\u2190',
+            href: hrefStr,
+            title: titleStr,
+            ariaLabel: titleStr,
+            css: {
+                ...this.backArrowCss(),
+                position: 'absolute',
+                top: '12px',
+                left: '12px',
+                width: '36px',
+                height: '36px',
+                fontSize: '22px'
+            },
+            hover: this.backArrowHoverCss()
+        });
         backLink.dataset.back = 'true';
         let middledCol = this.middledCol;
         Core.copyCss({ position: 'relative' }, middledCol);
