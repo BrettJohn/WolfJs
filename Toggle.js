@@ -1,21 +1,37 @@
 Page.prototype.toggle = function(obj, optionArr, onchangeFn = null) {
-    let defaultThemeObj = { back: 'rgba(255, 255, 255, 0.05)', color: 'rgba(255, 255, 255, 0.35)',
-        border: '1px solid rgba(255, 255, 255, 0.15)', selectedBack: this.color4, selectedColor: this.color1,
+    let defaultThemeObj = {
+        back: 'rgba(255, 255, 255, 0.05)',
+        color: 'rgba(255, 255, 255, 0.35)',
+        border: '1px solid rgba(255, 255, 255, 0.15)',
+        selectedBack: this.color4,
+        selectedColor: this.color1,
         selectedOutline: '1px dashed ' + this.color2,
-        ...this.toggleThemeCss, ...obj.themeCss };
+        ...this.toggleThemeCss,
+        ...obj.themeCss
+    };
     let toggleObj = { selectedItem: null, btnArr: [] };
     toggleObj.div = this.row({ css: { flexWrap: 'nowrap', ...obj.css } });
     let lastInt = optionArr.length - 1;
     optionArr.forEach((optionObj, i) => {
-        let btn = this.button({ html: optionObj.Name, hover: {}, disabled: obj.disabled === true, css: {
-            height: '32px', padding: '0 10px', margin: 0, boxShadow: 'none',
-            borderRadius: i === 0 ? '5px 0 0 5px' : i === lastInt ? '0 5px 5px 0' : '0', ...obj.btnCss
-        }, onclick: () => {
-            toggleObj.setSelected(optionObj.Id);
-            if (onchangeFn != null) {
-                onchangeFn(optionObj.Id);
+        let btn = this.button({
+            html: optionObj.Name,
+            hover: {},
+            disabled: obj.disabled === true,
+            css: {
+                height: '32px',
+                padding: '0 10px',
+                margin: 0,
+                boxShadow: 'none',
+                borderRadius: i === 0 ? '5px 0 0 5px' : i === lastInt ? '0 5px 5px 0' : '0',
+                ...obj.btnCss
+            },
+            onclick: () => {
+                toggleObj.setSelected(optionObj.Id);
+                if (onchangeFn != null) {
+                    onchangeFn(optionObj.Id);
+                }
             }
-        } });
+        });
         btn.optionId = optionObj.Id;
         btn.optionThemeObj = { ...defaultThemeObj, ...optionObj.themeCss };
         toggleObj.btnArr.push(btn);

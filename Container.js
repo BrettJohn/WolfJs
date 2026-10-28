@@ -10,13 +10,36 @@ class Container extends Page {
 
     popup(obj, widthStr = '500px', css = {}) {
         this.popupArr ??= [];
-        let popupDiv = this.div({ role: 'dialog', ariaModal: 'true', css: { position: 'fixed', inset: 0,
-            zIndex: 1000 + this.popupArr.length, display: 'flex', alignItems: 'center', justifyContent: 'center',
-            padding: '16px', boxSizing: 'border-box', backdropFilter: 'blur(3px)' } });
-        let popupBodyEl = this.div({ css: { ...this.panelBaseCss(), padding: '10px', width: widthStr,
-            maxWidth: '100%', maxHeight: '100%', overflowY: 'auto', boxSizing: 'border-box', textAlign: 'center',
-            fontSize: '14px', backgroundColor: this.color0, ...css
-        } });
+        let popupDiv = this.div({
+            role: 'dialog',
+            ariaModal: 'true',
+            css: {
+                position: 'fixed',
+                inset: 0,
+                zIndex: 1000 + this.popupArr.length,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: '16px',
+                boxSizing: 'border-box',
+                backdropFilter: 'blur(3px)'
+            }
+        });
+        let popupBodyEl = this.div({
+            css: {
+                ...this.panelBaseCss(),
+                padding: '10px',
+                width: widthStr,
+                maxWidth: '100%',
+                maxHeight: '100%',
+                overflowY: 'auto',
+                boxSizing: 'border-box',
+                textAlign: 'center',
+                fontSize: '14px',
+                backgroundColor: this.color0,
+                ...css
+            }
+        });
         popupDiv.glow = (colorStr, swirlBool = false) => {
             let nearStr = `color-mix(in srgb, ${colorStr} 70%, transparent)`;
             let tintStr = `color-mix(in srgb, ${colorStr} 16%, transparent)`;
@@ -81,8 +104,11 @@ class Container extends Page {
         }
         popupBodyEl.tabIndex = -1;
         popupDiv.querySelectorAll('a:not([href])').forEach((a) => a.tabIndex = 0);
-        (popupDiv.querySelector('input:not([type=hidden]):not([type=file]), textarea, select') ?? defaultBtnFn()
-            ?? popupBodyEl).focus({ preventScroll: true });
+        (
+            popupDiv.querySelector('input:not([type=hidden]):not([type=file]), textarea, select')
+            ?? defaultBtnFn()
+            ?? popupBodyEl
+        ).focus({ preventScroll: true });
         return popupDiv;
     }
 
@@ -109,12 +135,19 @@ class Container extends Page {
             let angleFlt = stepInt * Math.PI / 6;
             let xInt = Math.round(Math.cos(angleFlt) * 12);
             let yInt = Math.round(Math.sin(angleFlt) * 12);
-            return { boxShadow: `0 0 12px 1px ${nearStr}, ${xInt}px ${yInt}px 26px 2px ${nearStr},
-                ${-2 * xInt}px ${-2 * yInt}px 70px 10px ${farStr}` };
+            return {
+                boxShadow: `0 0 12px 1px ${nearStr}, ${xInt}px ${yInt}px 26px 2px ${nearStr},
+                ${-2 * xInt}px ${-2 * yInt}px 70px 10px ${farStr}`
+            };
         });
         let iterationsInt = this.motionBool ? Infinity : 1;
-        let pulseTimingObj = { duration: 1600, iterations: iterationsInt, direction: 'alternate',
-            easing: 'ease-in-out', fill: 'forwards' };
+        let pulseTimingObj = {
+            duration: 1600,
+            iterations: iterationsInt,
+            direction: 'alternate',
+            easing: 'ease-in-out',
+            fill: 'forwards'
+        };
         let swirlTimingObj = { duration: 2400, iterations: iterationsInt, fill: 'forwards' };
         let [frameArr, timingObj] = swirlBool ? [swirlArr, swirlTimingObj] : [pulseArr, pulseTimingObj];
         el.glowAnimation?.cancel();

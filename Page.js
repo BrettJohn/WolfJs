@@ -30,9 +30,9 @@ class Page extends Element {
         this.headEl.appendChild(this.link({ href: this.titleImgPathStr, rel: 'icon' }));
         this.addCssObj(this.rebootCssObj());
         this.addCssObj(this.scrollbarCssObj());
-        this.headEl.appendChild(this.link(
-            { href: 'https://fonts.googleapis.com/css?family=Jaldi', rel: 'stylesheet' }
-        ));
+        this.headEl.appendChild(
+            this.link({ href: 'https://fonts.googleapis.com/css?family=Jaldi', rel: 'stylesheet' })
+        );
         this.body({ css: { ...this.fontCss, ...this.backCss }});
         window.onresize = function(event) { }; // TODO
     }
@@ -44,8 +44,11 @@ class Page extends Element {
     addCssObj(selectorObj) {
         let ruleFn = (css) => Object.entries(css)
             .map(([keyStr, value]) => `${keyStr.replace(/[A-Z]/g, (c) => `-${c.toLowerCase()}`)}: ${value};`).join(' ');
-        this.addCss(Object.entries(selectorObj).map(([selectorStr, css]) => `${selectorStr} { ${ruleFn(css)} }`)
-            .join('\n'));
+        this.addCss(
+            Object.entries(selectorObj)
+                .map(([selectorStr, css]) => `${selectorStr} { ${ruleFn(css)} }`)
+                .join('\n')
+        );
     }
 
     scrollbarCssObj() {
@@ -75,37 +78,65 @@ class Page extends Element {
             small: { fontSize: '80%' },
             a: { textDecoration: 'none', backgroundColor: 'transparent' },
             'a:hover': { textDecoration: 'underline' },
-            'pre, code': { fontFamily: 'SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace',
-                fontSize: '1em' },
+            'pre, code': {
+                fontFamily: 'SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace',
+                fontSize: '1em'
+            },
             pre: { overflow: 'auto' },
             img: { verticalAlign: 'middle', borderStyle: 'none' },
             table: { borderCollapse: 'collapse' },
             th: { textAlign: 'inherit' },
             label: { display: 'inline-block', marginBottom: '.5rem' },
-            'input, button, select, optgroup, textarea': { margin: 0, fontFamily: 'inherit', fontSize: 'inherit',
-                lineHeight: 'inherit' },
+            'input, button, select, optgroup, textarea': {
+                margin: 0,
+                fontFamily: 'inherit',
+                fontSize: 'inherit',
+                lineHeight: 'inherit'
+            },
             'button, input': { overflow: 'visible' },
             'button:not(:disabled)': { cursor: 'pointer' },
             textarea: { overflow: 'auto', resize: 'vertical' },
-            hr: { boxSizing: 'content-box', height: 0, marginTop: '1rem', marginBottom: '1rem', border: 0,
-                borderTop: '1px solid rgba(0, 0, 0, .1)' },
+            hr: {
+                boxSizing: 'content-box',
+                height: 0,
+                marginTop: '1rem',
+                marginBottom: '1rem',
+                border: 0,
+                borderTop: '1px solid rgba(0, 0, 0, .1)'
+            },
             '[hidden]': { display: 'none !important' }
         };
     }
 
     toast(messageStr) {
         if (!this.toastDiv) {
-            this.toastDiv = this.div({ role: 'status', css: { position: 'fixed', left: '50%', bottom: '18px',
-                transform: 'translate(-50%, 20px)', opacity: 0, pointerEvents: 'none', zIndex: 3000,
-                backgroundColor: this.color1, color: this.color0, padding: '8px 14px', borderRadius: '8px',
-                fontSize: '14px', transition: 'opacity .2s, transform .2s' } });
+            this.toastDiv = this.div({
+                role: 'status',
+                css: {
+                    position: 'fixed',
+                    left: '50%',
+                    bottom: '18px',
+                    transform: 'translate(-50%, 20px)',
+                    opacity: 0,
+                    pointerEvents: 'none',
+                    zIndex: 3000,
+                    backgroundColor: this.color1,
+                    color: this.color0,
+                    padding: '8px 14px',
+                    borderRadius: '8px',
+                    fontSize: '14px',
+                    transition: 'opacity .2s, transform .2s'
+                }
+            });
             document.body.add(this.toastDiv);
         }
         this.toastDiv.textContent = messageStr;
         Core.copyCss({ opacity: 1, transform: 'translate(-50%, 0)' }, this.toastDiv);
         clearTimeout(this.toastTimerInt);
-        this.toastTimerInt = setTimeout(() => Core.copyCss({ opacity: 0, transform: 'translate(-50%, 20px)' },
-            this.toastDiv), 3200);
+        this.toastTimerInt = setTimeout(
+            () => Core.copyCss({ opacity: 0, transform: 'translate(-50%, 20px)' }, this.toastDiv),
+            3200
+        );
     }
 
     download(fileNameStr, textStr, typeStr = 'text/plain') {
@@ -163,14 +194,17 @@ class Page extends Element {
     }
 
     labelCol(obj) {
-        return this.responsive(this.col4(obj), (widthInt) => ({
-            textAlign: widthInt >= this.breakpointObj.md ? 'right' : 'left' }));
+        return this.responsive(
+            this.col4(obj),
+            (widthInt) => ({ textAlign: widthInt >= this.breakpointObj.md ? 'right' : 'left' })
+        );
     }
 
     infoRow(html, infoEl, rowEl = null) {
         let nameObj = { html, css: { ...this.inputLabelCss, paddingRight: '15px' } };
         (rowEl ?? this.rowElement()).add(this.row({ css: { paddingBottom: '20px' } })
-            .add(this.labelCol(nameObj)).add(this.col9().add(infoEl)));
+            .add(this.labelCol(nameObj)).add(this.col9().add(infoEl))
+        );
         return infoEl;
     }
 }

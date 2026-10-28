@@ -49,15 +49,18 @@ function stopLoading() {
 }
 
 async function fetchApi(apiUrlStr, inputObj = null) {
-    return await fetch(apiUrlStr + '/', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            mode: 'cors',
-            Accept: 'application/json',
-        },
-        body: inputObj == null ? null : JSON.stringify(inputObj),
-    })
+    return await fetch(
+        apiUrlStr + '/',
+        {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                mode: 'cors',
+                Accept: 'application/json',
+            },
+            body: inputObj == null ? null : JSON.stringify(inputObj),
+        }
+    )
     .then((responseObj) => responseObj.json())
     .then((responseObj) => {
         return { success: true, response: responseObj };

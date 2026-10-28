@@ -4,9 +4,30 @@
 Page.prototype.math = function(texStr) {
     let tokenArr = texStr.match(/\\[a-zA-Z]+|\\.|[{}^_&]|\s+|./g) ?? [];
     let indexInt = 0;
-    let symbolObj = { pi: 'π', theta: 'θ', sigma: 'σ', rho: 'ρ', nu: 'ν', mu: 'μ', varepsilon: 'ε', gamma: 'γ',
-        delta: 'δ', Delta: 'Δ', Lambda: 'Λ', Psi: 'Ψ', hbar: 'ℏ', nabla: '∇', partial: '∂', infty: '∞',
-        cdot: '·', times: '×', geq: '≥', propto: '∝', mid: '∣', Sigma: 'Σ' };
+    let symbolObj = {
+        pi: 'π',
+        theta: 'θ',
+        sigma: 'σ',
+        rho: 'ρ',
+        nu: 'ν',
+        mu: 'μ',
+        varepsilon: 'ε',
+        gamma: 'γ',
+        delta: 'δ',
+        Delta: 'Δ',
+        Lambda: 'Λ',
+        Psi: 'Ψ',
+        hbar: 'ℏ',
+        nabla: '∇',
+        partial: '∂',
+        infty: '∞',
+        cdot: '·',
+        times: '×',
+        geq: '≥',
+        propto: '∝',
+        mid: '∣',
+        Sigma: 'Σ'
+    };
     let spaceObj = { '\\,': '0.17em', '\\ ': '0.33em', '\\qquad': '2em', '\\!': '-0.17em' };
     let peekFn = () => {
         while (/^\s+$/.test(tokenArr[indexInt] ?? '')) {
@@ -120,12 +141,16 @@ Page.prototype.math = function(texStr) {
         }
         if (kindStr === 'upright' || kindStr === 'delimiter') {
             let tallBool = kindStr === 'delimiter' && rootObj.nodeArr.some((childObj) => childObj.kindStr === 'frac');
-            return this.span({ textContent: nodeObj.textStr, css: tallBool ? { fontSize: '1.5em', lineHeight: 1,
-                verticalAlign: 'middle' } : {} });
+            return this.span({
+                textContent: nodeObj.textStr,
+                css: tallBool ? { fontSize: '1.5em', lineHeight: 1, verticalAlign: 'middle' } : {}
+            });
         }
         if (kindStr === 'function') {
-            return this.span({ textContent: nodeObj.textStr, css: { marginLeft: previousKindStr ? '0.17em' : 0,
-                marginRight: '0.12em' } });
+            return this.span({
+                textContent: nodeObj.textStr,
+                css: { marginLeft: previousKindStr ? '0.17em' : 0, marginRight: '0.12em' }
+            });
         }
         if (kindStr === 'text') {
             return this.span({ textContent: nodeObj.textStr, css: { fontStyle: 'normal' } });
@@ -139,45 +164,90 @@ Page.prototype.math = function(texStr) {
         if (kindStr === 'sqrt') {
             return this.span({ css: { whiteSpace: 'nowrap' } }).add(this.span({ textContent: '√' }))
                 .add(this.span({ css: { borderTop: '1px solid currentColor', paddingLeft: '0.1em' } })
-                    .add(renderFn(nodeObj.bodyObj)));
+                    .add(renderFn(nodeObj.bodyObj))
+                );
         }
         if (kindStr === 'frac') {
-            return this.span({ css: { display: 'inline-flex', flexDirection: 'column', alignItems: 'center',
-                verticalAlign: 'middle', margin: '0 0.12em', fontSize: nodeObj.smallBool ? '0.7em' : '0.9em',
-                lineHeight: 1.15 } })
+            return this.span({
+                css: {
+                    display: 'inline-flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    verticalAlign: 'middle',
+                    margin: '0 0.12em',
+                    fontSize: nodeObj.smallBool ? '0.7em' : '0.9em',
+                    lineHeight: 1.15
+                }
+            })
                 .add(this.span({ css: { padding: '0 0.15em' } }).add(renderFn(nodeObj.topObj)))
-                .add(this.span({ css: { padding: '0 0.15em', borderTop: '1px solid currentColor', alignSelf: 'stretch',
-                    textAlign: 'center' } }).add(renderFn(nodeObj.bottomObj)));
+                .add(this.span({
+                    css: {
+                        padding: '0 0.15em',
+                        borderTop: '1px solid currentColor',
+                        alignSelf: 'stretch',
+                        textAlign: 'center'
+                    }
+                })
+                    .add(renderFn(nodeObj.bottomObj))
+                );
         }
         if (kindStr === 'operator') {
-            return this.span({ textContent: nodeObj.textStr, css: { fontSize: '1.5em', lineHeight: 1,
-                verticalAlign: 'middle' } });
+            return this.span({
+                textContent: nodeObj.textStr,
+                css: { fontSize: '1.5em', lineHeight: 1, verticalAlign: 'middle' }
+            });
         }
         if (kindStr === 'aligned') {
-            let gridEl = this.span({ css: { display: 'inline-grid', columnGap: '0.3em', rowGap: '0.5em',
-                alignItems: 'center', gridTemplateColumns: `repeat(${nodeObj.rowMatrix[0].length}, auto)` } });
-            nodeObj.rowMatrix.forEach((cellArr) => cellArr.forEach((cellObj, i) => gridEl.add(this.span({ css: {
-                justifySelf: i % 2 ? 'start' : 'end', paddingLeft: i && i % 2 === 0 ? '1.5em' : 0 } })
-                .add(renderFn(cellObj)))));
+            let gridEl = this.span({
+                css: {
+                    display: 'inline-grid',
+                    columnGap: '0.3em',
+                    rowGap: '0.5em',
+                    alignItems: 'center',
+                    gridTemplateColumns: `repeat(${nodeObj.rowMatrix[0].length}, auto)`
+                }
+            });
+            nodeObj.rowMatrix.forEach(
+                (cellArr) => cellArr.forEach(
+                    (cellObj, i) => gridEl.add(
+                        this.span({
+                            css: {
+                                justifySelf: i % 2 ? 'start' : 'end',
+                                paddingLeft: i && i % 2 === 0 ? '1.5em' : 0
+                            }
+                        }).add(renderFn(cellObj))
+                    )
+                )
+            );
             return gridEl;
         }
         let baseObj = nodeObj.baseObj;
         let scriptCss = { fontSize: '0.7em', lineHeight: 1 };
         if (baseObj.kindStr === 'operator' && baseObj.stackBool) {
-            return this.span({ css: { display: 'inline-flex', flexDirection: 'column', alignItems: 'center',
-                verticalAlign: 'middle', margin: '0 0.15em' } })
+            return this.span({
+                css: {
+                    display: 'inline-flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    verticalAlign: 'middle',
+                    margin: '0 0.15em'
+                }
+            })
                 .add(this.span({ css: scriptCss }).add(renderFn(nodeObj.supObj ?? { kindStr: 'list', nodeArr: [] })))
                 .add(renderFn(baseObj))
                 .add(this.span({ css: scriptCss }).add(renderFn(nodeObj.subObj ?? { kindStr: 'list', nodeArr: [] })));
         }
-        let stackEl = this.span({ css: { display: 'inline-flex', flexDirection: 'column', verticalAlign: 'middle',
-            marginLeft: '0.05em' } });
+        let stackEl = this.span({
+            css: { display: 'inline-flex', flexDirection: 'column', verticalAlign: 'middle', marginLeft: '0.05em' }
+        });
         if (nodeObj.supObj && nodeObj.subObj) {
             stackEl.add(this.span({ css: scriptCss }).add(renderFn(nodeObj.supObj)))
                 .add(this.span({ css: scriptCss }).add(renderFn(nodeObj.subObj)));
         } else {
-            Core.copyCss({ display: 'inline-block', verticalAlign: nodeObj.supObj ? '0.55em' : '-0.3em', ...scriptCss },
-                stackEl);
+            Core.copyCss(
+                { display: 'inline-block', verticalAlign: nodeObj.supObj ? '0.55em' : '-0.3em', ...scriptCss },
+                stackEl
+            );
             stackEl.add(renderFn(nodeObj.supObj ?? nodeObj.subObj));
         }
         let gapBool = ['operator', 'function'].includes(baseObj.kindStr);
@@ -186,8 +256,9 @@ Page.prototype.math = function(texStr) {
         let wrapCss = { whiteSpace: 'nowrap', marginRight: gapBool ? '0.17em' : 0 };
         return this.span({ css: wrapCss }).add(baseEl).add(stackEl);
     };
-    return this.span({ css: { fontFamily: "'Noto Serif', 'Cambria Math', 'Times New Roman', serif",
-        fontSize: '1.25em' } }).add(renderFn(rootObj));
+    return this.span({
+        css: { fontFamily: "'Noto Serif', 'Cambria Math', 'Times New Roman', serif", fontSize: '1.25em' }
+    }).add(renderFn(rootObj));
 };
 
 Page.prototype.figure = function(nameStr, boldArr) {
@@ -284,8 +355,10 @@ Page.prototype.figure = function(nameStr, boldArr) {
             sideArr: [
                 { dStr: 'M20,102 V70 H33.6 V63.6 H46.4 V70 H73.6 V63.6 H86.4 V70 H100 V102 Z' },
                 { dStr: 'M100,102 V70 H113.6 V63.6 H126.4 V70 H153.6 V63.6 H166.4 V70 H180 V102 Z' },
-                { dStr: `M60,70 H72.8 V62.8 H87.2 V70 H112.8 V62.8 H127.2 V70 H140 V38
-                    H126.4 V31.6 H113.6 V38 H86.4 V31.6 H73.6 V38 H60 Z` }
+                {
+                    dStr: `M60,70 H72.8 V62.8 H87.2 V70 H112.8 V62.8 H127.2 V70 H140 V38
+                    H126.4 V31.6 H113.6 V38 H86.4 V31.6 H73.6 V38 H60 Z`
+                }
             ],
             labelArr: [
                 { labelStr: 'nub', xInt: 40, yInt: 58, labelCss: smallCss },

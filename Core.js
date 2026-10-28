@@ -37,8 +37,14 @@ class Core {
     }
     static loadScript(srcStr) {
         Core.scriptPromiseObj ??= {};
-        Core.scriptPromiseObj[srcStr] ??= new Promise((resolveFn, rejectFn) => document.head.append(
-            Object.assign(document.createElement('script'), { src: srcStr, onload: resolveFn, onerror: rejectFn })));
+        Core.scriptPromiseObj[srcStr] ??= new Promise(
+            (resolveFn, rejectFn) => document.head.append(
+                Object.assign(
+                    document.createElement('script'),
+                    { src: srcStr, onload: resolveFn, onerror: rejectFn }
+                )
+            )
+        );
         return Core.scriptPromiseObj[srcStr];
     }
     static copyCss(css, toEl) {

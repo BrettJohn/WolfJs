@@ -14,10 +14,14 @@ class MiddledController extends Middled {
         this.completeBtn = this.confirmBtn({ html: 'Complete', onclick: () => { this.complete(); }});
         row.add(this.col3());
         if (this.Id) {
-            row.add(this.col3({ css: { ...this.centerTextCss } }).add(
-                this.confirmBtn({ html: 'Delete',
-                    onclick: () => { this.askDelete(); }, css: { backgroundColor: this.color13 }
-                }))
+            row.add(
+                this.col3({ css: { ...this.centerTextCss } }).add(
+                    this.confirmBtn({
+                        html: 'Delete',
+                        onclick: () => { this.askDelete(); },
+                        css: { backgroundColor: this.color13 }
+                    })
+                )
             );
             row.add(this.col3({ css: { ...this.centerTextCss } }).add(this.completeBtn));
         } else {
@@ -47,9 +51,11 @@ class MiddledController extends Middled {
         } else {
             let okBtn = this.button({ html: 'OK'});
             let popup = this.popup(
-                this.div().add(
-                    this.h1({ html: 'Failed to complete' })
-                ).add(this.p({ html: p || resultObj.Error || '', css: { fontSize: '15px' } })).add(okBtn)).bad();
+                this.div()
+                    .add(this.h1({ html: 'Failed to complete' }))
+                    .add(this.p({ html: p || resultObj.Error || '', css: { fontSize: '15px' } }))
+                    .add(okBtn)
+            ).bad();
             okBtn.onclick = () => popup.remove();
         }
     }

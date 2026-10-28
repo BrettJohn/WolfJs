@@ -18,10 +18,22 @@ class Middled extends Container {
     }
 
     cornerBackLink(hrefStr, titleStr) {
-        let backLink = this.a({ html: '\u2190', href: hrefStr, title: titleStr, ariaLabel: titleStr,
-            css: { ...this.backArrowCss(), position: 'absolute', top: '12px', left: '12px', width: '36px',
-                height: '36px', fontSize: '22px' },
-            hover: this.backArrowHoverCss() });
+        let backLink = this.a({
+            html: '\u2190',
+            href: hrefStr,
+            title: titleStr,
+            ariaLabel: titleStr,
+            css: {
+                ...this.backArrowCss(),
+                position: 'absolute',
+                top: '12px',
+                left: '12px',
+                width: '36px',
+                height: '36px',
+                fontSize: '22px'
+            },
+            hover: this.backArrowHoverCss()
+        });
         backLink.dataset.back = 'true';
         let middledCol = this.middledCol;
         Core.copyCss({ position: 'relative' }, middledCol);

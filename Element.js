@@ -32,20 +32,37 @@ class Element extends Theme {
     }
 
     backArrowCss() {
-        return { display: 'inline-flex', alignItems: 'center', justifyContent: 'center', boxSizing: 'border-box',
-            flexShrink: 0, lineHeight: 1, borderRadius: '8px', color: this.color2, textDecoration: 'none',
-            transition: 'transform .15s, background-color .15s, color .15s' };
+        return {
+            display: 'inline-flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            boxSizing: 'border-box',
+            flexShrink: 0,
+            lineHeight: 1,
+            borderRadius: '8px',
+            color: this.color2,
+            textDecoration: 'none',
+            transition: 'transform .15s, background-color .15s, color .15s'
+        };
     }
 
     backArrowHoverCss() {
-        return { backgroundColor: `color-mix(in srgb, ${this.color2} 18%, transparent)`, color: this.color1,
-            transform: 'translateX(-3px)' };
+        return {
+            backgroundColor: `color-mix(in srgb, ${this.color2} 18%, transparent)`,
+            color: this.color1,
+            transform: 'translateX(-3px)'
+        };
     }
 
     panelBaseCss() {
-        return { color: this.color1, backgroundColor: 'rgba(0, 0, 0, 0.75)',
-            border: '1px solid rgba(255, 255, 255, 0.14)', borderRadius: '6px',
-            boxShadow: '0 10px 30px rgba(0, 0, 0, 0.6)', ...this.panelCss };
+        return {
+            color: this.color1,
+            backgroundColor: 'rgba(0, 0, 0, 0.75)',
+            border: '1px solid rgba(255, 255, 255, 0.14)',
+            borderRadius: '6px',
+            boxShadow: '0 10px 30px rgba(0, 0, 0, 0.6)',
+            ...this.panelCss
+        };
     }
 
     addCss(cssStr) {
@@ -90,7 +107,8 @@ class Element extends Theme {
     }
 
     input(obj = {}) {
-        this.inputCss =  { display: 'inline-block',
+        this.inputCss =  {
+            display: 'inline-block',
             margin: '0px',
             padding: '0px 0px 0px 5px',
             height: '28px',
@@ -165,8 +183,12 @@ class Element extends Theme {
         return textarea;
     }
     h1(obj = {}) {
-        this.h1Css = { ...this.fullWidthCss, ...this.centerTextCss,
-            color: this.color2, fontWeight: 'bold', margin: '0 0 25px 0'
+        this.h1Css = {
+            ...this.fullWidthCss,
+            ...this.centerTextCss,
+            color: this.color2,
+            fontWeight: 'bold',
+            margin: '0 0 25px 0'
         };
         obj.css = Core.objCopy(obj.css, this.h1Css);
         return this.core(obj, 'h1');
@@ -209,14 +231,22 @@ class Element extends Theme {
     }
     icon(nameStr) {
         let eyeStr = 'M1,8 Q8,1 15,8 Q8,15 1,8 Z M10,8 A2,2 0 1,1 6,8 A2,2 0 1,1 10,8';
-        let dObj = { search: 'M11,6.5 A4.5,4.5 0 1,1 2,6.5 A4.5,4.5 0 1,1 11,6.5 M9.7,9.7 L14.5,14.5',
+        let dObj = {
+            search: 'M11,6.5 A4.5,4.5 0 1,1 2,6.5 A4.5,4.5 0 1,1 11,6.5 M9.7,9.7 L14.5,14.5',
             refresh: 'M13.5,8 A5.5,5.5 0 1,1 11.9,4.1 M12.4,1.4 L12,4.6 L8.8,4.2',
             eye: eyeStr,
-            eyeOff: `${eyeStr} M2.5,2.5 L13.5,13.5` };
-        return this.svg({ attr: { viewBox: '0 0 16 16' }, css: { display: 'inline-block', width: '1.2em',
-            height: '1.2em', verticalAlign: 'middle' } })
-            .add(this.path({ attr: { d: dObj[nameStr] }, css: { strokeWidth: '1.8', strokeLinecap: 'round',
-                strokeLinejoin: 'round' } }));
+            eyeOff: `${eyeStr} M2.5,2.5 L13.5,13.5`
+        };
+        return this.svg({
+            attr: { viewBox: '0 0 16 16' },
+            css: { display: 'inline-block', width: '1.2em', height: '1.2em', verticalAlign: 'middle' }
+        })
+            .add(
+                this.path({
+                    attr: { d: dObj[nameStr] },
+                    css: { strokeWidth: '1.8', strokeLinecap: 'round', strokeLinejoin: 'round' }
+                })
+            );
     }
     svgText(obj = {}) {
         this.svgTextCss = { textAnchor: 'middle', dominantBaseline: 'middle' };

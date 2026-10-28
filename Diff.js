@@ -55,18 +55,34 @@ class Diff {
 }
 
 Page.prototype.diffCssSet = function() {
-    this.diffViewCss = { border: '1px solid rgba(127, 127, 127, 0.3)', borderRadius: '8px', overflow: 'hidden',
-        textAlign: 'left', fontSize: '15px', lineHeight: 1.6 };
+    this.diffViewCss = {
+        border: '1px solid rgba(127, 127, 127, 0.3)',
+        borderRadius: '8px',
+        overflow: 'hidden',
+        textAlign: 'left',
+        fontSize: '15px',
+        lineHeight: 1.6
+    };
     this.diffMonoCss = { ...this.diffViewCss, fontFamily: 'monospace', fontSize: '13px' };
     this.diffRowCss = { display: 'grid', gridTemplateColumns: '1fr 1fr' };
-    this.diffCellCss = { padding: '2px 10px', whiteSpace: 'pre-wrap', wordBreak: 'break-word', minHeight: '1.6em',
-        borderRight: '1px solid rgba(127, 127, 127, 0.3)' };
+    this.diffCellCss = {
+        padding: '2px 10px',
+        whiteSpace: 'pre-wrap',
+        wordBreak: 'break-word',
+        minHeight: '1.6em',
+        borderRight: '1px solid rgba(127, 127, 127, 0.3)'
+    };
     this.diffRemoveCss = { ...this.diffCellCss, backgroundColor: 'rgba(255, 70, 70, 0.14)' };
     this.diffAddCss = { ...this.diffCellCss, backgroundColor: 'rgba(40, 200, 90, 0.14)' };
     this.diffRemoveWordCss = { backgroundColor: 'rgba(255, 70, 70, 0.45)', borderRadius: '3px' };
     this.diffAddWordCss = { backgroundColor: 'rgba(40, 200, 90, 0.45)', borderRadius: '3px' };
-    this.diffFoldCss = { padding: '4px 10px', cursor: 'pointer', opacity: 0.6, fontSize: '13px',
-        backgroundColor: 'rgba(127, 127, 127, 0.08)' };
+    this.diffFoldCss = {
+        padding: '4px 10px',
+        cursor: 'pointer',
+        opacity: 0.6,
+        fontSize: '13px',
+        backgroundColor: 'rgba(127, 127, 127, 0.08)'
+    };
 };
 
 Page.prototype.diffView = function(oldStr, newStr, monoBool = false) {
@@ -108,8 +124,11 @@ Page.prototype.diffView = function(oldStr, newStr, monoBool = false) {
         } else {
             let hiddenArr = sameArr.slice(contextInt, -contextInt);
             sameArr.slice(0, contextInt).forEach((lineArr) => viewEl.add(rowFn(lineArr)));
-            let foldEl = this.div({ textContent: `⋯ ${hiddenArr.length} unchanged lines`, css: this.diffFoldCss,
-                onclick: () => foldEl.replaceWith(...hiddenArr.map(rowFn)) });
+            let foldEl = this.div({
+                textContent: `⋯ ${hiddenArr.length} unchanged lines`,
+                css: this.diffFoldCss,
+                onclick: () => foldEl.replaceWith(...hiddenArr.map(rowFn))
+            });
             viewEl.add(foldEl);
             sameArr.slice(-contextInt).forEach((lineArr) => viewEl.add(rowFn(lineArr)));
         }
