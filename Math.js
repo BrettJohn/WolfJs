@@ -192,7 +192,7 @@ Page.prototype.math = function(texStr) {
 
 Page.prototype.figure = function(nameStr, boldArr) {
     let dashCss = { strokeDasharray: '4 3' };
-    let hiddenCss = { ...dashCss, opacity: 0.35 };
+    let hiddenCss = { strokeDasharray: '4 3', opacity: 0.35 };
     let smallCss = { fontSize: '12px', fontStyle: 'normal' };
     let thickCss = { strokeWidth: '3.5' };
     let arrowFn = (x1Flt, y1Flt, x2Flt, y2Flt) => {
@@ -204,107 +204,283 @@ Page.prototype.figure = function(nameStr, boldArr) {
         return `M${x1Flt},${y1Flt} L${x2Flt},${y2Flt} M${pointFn(7, 4)} L${x2Flt},${y2Flt} L${pointFn(7, -4)}`;
     };
     let figureObj = {
-        right: { sideMatrix: [['a', 'M20,95 H175', 97, 108], ['o', 'M175,95 V20', 187, 57],
-            ['h', 'M20,95 L175,20', 92, 46]],
-            markStr: 'M163,95 V83 H175 M44,95 A24,24 0 0 0 41.6,84.5', labelMatrix: [['θ', 56, 87]] },
-        isosceles: { sideMatrix: [['s', 'M30,100 L100,15', 57, 53], ['s', 'M170,100 L100,15', 143, 53],
-            ['b', 'M30,100 H170', 100, 111], ['h', 'M100,15 V100', 108, 62, dashCss]],
+        right: {
+            sideArr: [
+                { sideStr: 'a', dStr: 'M20,95 H175', xInt: 97, yInt: 108 },
+                { sideStr: 'o', dStr: 'M175,95 V20', xInt: 187, yInt: 57 },
+                { sideStr: 'h', dStr: 'M20,95 L175,20', xInt: 92, yInt: 46 }
+            ],
+            markStr: 'M163,95 V83 H175 M44,95 A24,24 0 0 0 41.6,84.5',
+            labelArr: [{ labelStr: 'θ', xInt: 56, yInt: 87 }]
+        },
+        isosceles: {
+            sideArr: [
+                { sideStr: 's', dStr: 'M30,100 L100,15', xInt: 57, yInt: 53 },
+                { sideStr: 's', dStr: 'M170,100 L100,15', xInt: 143, yInt: 53 },
+                { sideStr: 'b', dStr: 'M30,100 H170', xInt: 100, yInt: 111 },
+                { sideStr: 'h', dStr: 'M100,15 V100', xInt: 108, yInt: 62, lineCss: dashCss }
+            ],
             markStr: 'M108,100 V92 H100 M48,100 A18,18 0 0 0 41.4,86.1 M152,100 A18,18 0 0 1 158.6,86.1',
-            labelMatrix: [['θ', 56, 89], ['θ', 144, 89]] },
-        equilateral: { sideMatrix: [['s', 'M45,104 L100,8.7', 63, 52], ['s', 'M155,104 L100,8.7', 137, 52],
-            ['s', 'M45,104 H155', 100, 114], ['h', 'M100,8.7 V104', 107, 62, dashCss]],
+            labelArr: [{ labelStr: 'θ', xInt: 56, yInt: 89 }, { labelStr: 'θ', xInt: 144, yInt: 89 }]
+        },
+        equilateral: {
+            sideArr: [
+                { sideStr: 's', dStr: 'M45,104 L100,8.7', xInt: 63, yInt: 52 },
+                { sideStr: 's', dStr: 'M155,104 L100,8.7', xInt: 137, yInt: 52 },
+                { sideStr: 's', dStr: 'M45,104 H155', xInt: 100, yInt: 114 },
+                { sideStr: 'h', dStr: 'M100,8.7 V104', xInt: 107, yInt: 62, lineCss: dashCss }
+            ],
             markStr: 'M108,104 V96 H100 M61,104 A16,16 0 0 0 53,90.1',
-            labelMatrix: [['60°', 72, 97, smallCss]] },
-        pyramid: { sideMatrix: [['b', 'M25,100 H125', 75, 111], ['', 'M125,100 L175,72'],
-            ['', 'M75,72 L25,100', 0, 0, hiddenCss],
-            ['', 'M75,72 H175', 0, 0, hiddenCss], ['', 'M100,12 L25,100'], ['', 'M100,12 L125,100'],
-            ['', 'M100,12 L175,72'], ['', 'M100,12 L75,72', 0, 0, hiddenCss], ['h', 'M100,12 V86', 108, 56, dashCss],
-            ['s', 'M100,12 L75,100', 78, 62, dashCss]], markStr: '', labelMatrix: [] },
-        section: { sideMatrix: [['', 'M45,80 L100,10 L155,80 Z'], ['', 'M5,80 H29 M58.5,80 H195'],
-            ['', 'M39.5,80 H160.5 V84.4 H39.5 Z'], ['', 'M52,80 L100,19 L148,80', 0, 0, dashCss],
-            ['', 'M83,84.4 V112 H117 V84.4'], ['', 'M86.3,86.6 H113.8 V108.6 H86.3 Z'],
-            ['', 'M29,80 L86.3,108.6 M58.5,80 L86.3,93.9']], markStr: '',
-            labelMatrix: [['casing', 150, 40, smallCss], ['core', 100, 62, smallCss], ['chamber', 145, 104, smallCss],
-                ['passage', 24, 100, smallCss], ['raft', 175, 92, smallCss]] },
-        platform: { sideMatrix: [['', 'M5,108 H195'], ['', 'M45,108 L91.7,48.6 H108.3 L155,108'],
-            ['', 'M91.7,48.6 L100,38 L108.3,48.6', 0, 0, hiddenCss], ['', 'M91.7,48.6 V37.6 H108.3'],
-            ['', 'M108.3,48.6 L182.6,108 M108.3,37.6 L182.6,97'],
-            ['', 'M100,32.8 A2,2 0 1 0 100,28.8 A2,2 0 1 0 100,32.8'],
-            ['', 'M100,32.8 V41.5 L97,48.6 M100,41.5 L103,48.6 M96,36 H104']],
-            markStr: '', labelMatrix: [['platform', 60, 40, smallCss], ['stair', 180, 80, smallCss]] },
-        block: { sideMatrix: [['', 'M20,102 V70 H33.6 V63.6 H46.4 V70 H73.6 V63.6 H86.4 V70 H100 V102 Z'],
-            ['', 'M100,102 V70 H113.6 V63.6 H126.4 V70 H153.6 V63.6 H166.4 V70 H180 V102 Z'],
-            ['', `M60,70 H72.8 V62.8 H87.2 V70 H112.8 V62.8 H127.2 V70 H140 V38
-                H126.4 V31.6 H113.6 V38 H86.4 V31.6 H73.6 V38 H60 Z`]], markStr: '',
-            labelMatrix: [['nub', 40, 58, smallCss], ['socket', 162, 50, smallCss],
-                ['500 × 250 × 200 mm', 100, 116, smallCss]] },
-        steps: { sideMatrix: [
-            ['b', 'M20,105 V85 H40 V65 H60 V45 H80 V25 H120 V45 H140 V65 H160 V85 H180 V105 Z', 100, 114],
-            ['', 'M20,105 L100,25 L180,105', 0, 0, hiddenCss]], markStr: '',
-            labelMatrix: [['h/n', 191, 95, smallCss]] },
-        inertia: { sideMatrix: [['', 'M10,100 H190'], ['m', 'M75,62 H125 V100 H75 Z', 100, 83],
-            ['F', arrowFn(75, 81, 35, 81), 50, 71], ['F', arrowFn(125, 81, 165, 81), 150, 71]], markStr: '',
-            labelMatrix: [['ΣF = 0, so v stays the same', 100, 40, smallCss]] },
-        force: { sideMatrix: [['', 'M10,100 H190'], ['m', 'M80,62 H130 V100 H80 Z', 105, 83],
-            ['F', arrowFn(25, 81, 78, 81), 48, 71], ['a', arrowFn(85, 48, 140, 48), 112, 37, dashCss]], markStr: '',
-            labelMatrix: [] },
-        pair: { sideMatrix: [['', 'M10,100 H190'], ['A', 'M40,64 H100 V100 H40 Z', 70, 84],
-            ['B', 'M100,56 H160 V100 H100 Z', 130, 80], ['F', arrowFn(104, 40, 148, 40), 126, 29],
-            ['−F', arrowFn(96, 40, 52, 40), 74, 29]], markStr: '', labelMatrix: [] },
-        squares: { sideMatrix: [['', 'M80,76 H120 V46 Z'], ['', 'M80,76 V116 H120 V76'], ['', 'M120,76 H150 V46 H120'],
-            ['', 'M80,76 L50,36 L90,6 L120,46']], markStr: 'M112,76 V68 H120',
-            labelMatrix: [['a²', 100, 98], ['b²', 135, 61], ['c²', 85, 41]] },
-        circle: { sideMatrix: [['', 'M44,62 H156 M100,8 V116', 0, 0, hiddenCss],
-            ['', 'M148,62 A48,48 0 1 1 52,62 A48,48 0 1 1 148,62'], ['1', 'M100,62 L136.8,31.1', 112, 40],
-            ['', 'M100,62 H136.8'], ['', 'M136.8,62 V31.1']], markStr: 'M114,62 A14,14 0 0 0 110.7,53',
-            labelMatrix: [['θ', 122, 56], ['cos θ', 118, 73, smallCss], ['sin θ', 162, 47, smallCss]] },
-        cosines: { sideMatrix: [['b', 'M40,100 H165', 102, 112], ['a', 'M40,100 L110,25', 66, 57],
-            ['c', 'M165,100 L110,25', 146, 57]], markStr: 'M58,100 A18,18 0 0 0 52.3,86.8',
-            labelMatrix: [['γ', 65, 91]] },
-        lever: { sideMatrix: [['', 'M20,96 H180', 0, 0, thickCss], ['', 'M100,98 L93,110 H107 Z'],
-            ['F₁', arrowFn(40, 58, 40, 92), 40, 49], ['F₂', arrowFn(150, 70, 150, 92), 150, 61],
-            ['d₁', 'M40,116 H100', 70, 107, dashCss], ['d₂', 'M100,116 H150', 125, 107, dashCss]], markStr: '',
-            labelMatrix: [] },
-        buoyancy: { sideMatrix: [['', 'M10,30 V110 H190 V30'], ['', 'M10,52 H190', 0, 0, dashCss],
-            ['', 'M80,36 H120 V76 H80 Z'], ['W', arrowFn(100, 6, 100, 34), 112, 15],
-            ['F', arrowFn(100, 106, 100, 78), 112, 98]], markStr: '', labelMatrix: [['water', 42, 66, smallCss]] },
-        spring: { sideMatrix: [['', 'M20,30 V100', 0, 0, thickCss],
-            ['', 'M20,65 H35 L42,55 L52,75 L62,55 L72,75 L82,55 L92,75 L99,65 H110'], ['', 'M110,50 H140 V80 H110 Z'],
-            ['F', arrowFn(140, 65, 182, 65), 162, 55], ['x', 'M110,96 H140 M110,90 V102 M140,90 V102', 125, 110]],
-            markStr: '', labelMatrix: [] },
-        cantilever: { sideMatrix: [['', 'M30,20 V110', 0, 0, thickCss], ['', 'M30,50 H170'],
-            ['', 'M30,50 Q110,52 170,72', 0, 0, dashCss], ['F', arrowFn(170, 10, 170, 46), 182, 22],
-            ['L', 'M30,96 H170 M30,90 V102 M170,90 V102', 100, 108], ['δ', 'M184,50 V72', 193, 61]],
-            markStr: '', labelMatrix: [] },
-        snell: { sideMatrix: [['', 'M10,60 H190'], ['', 'M100,10 V110', 0, 0, dashCss], ['', 'M45,12 L100,60'],
-            ['', 'M100,60 L128,110']], markStr: '',
-            labelMatrix: [['θ₁', 90, 34], ['θ₂', 111, 90], ['n₁', 28, 46, smallCss], ['n₂', 28, 76, smallCss]] },
-        circuit: { sideMatrix: [['', 'M40,30 H70 M130,30 H160 V90 H110 M90,90 H40 V30'],
-            ['R', 'M70,30 L75,22 L85,38 L95,22 L105,38 L115,22 L125,38 L130,30', 100, 11],
-            ['V', 'M90,80 V100 M110,84 V96', 100, 112], ['I', arrowFn(160, 48, 160, 72), 172, 60]],
-            markStr: '', labelMatrix: [] }
+            labelArr: [{ labelStr: '60°', xInt: 72, yInt: 97, labelCss: smallCss }]
+        },
+        pyramid: {
+            sideArr: [
+                { sideStr: 'b', dStr: 'M25,100 H125', xInt: 75, yInt: 111 },
+                { dStr: 'M125,100 L175,72' },
+                { dStr: 'M75,72 L25,100', lineCss: hiddenCss },
+                { dStr: 'M75,72 H175', lineCss: hiddenCss },
+                { dStr: 'M100,12 L25,100' },
+                { dStr: 'M100,12 L125,100' },
+                { dStr: 'M100,12 L175,72' },
+                { dStr: 'M100,12 L75,72', lineCss: hiddenCss },
+                { sideStr: 'h', dStr: 'M100,12 V86', xInt: 108, yInt: 56, lineCss: dashCss },
+                { sideStr: 's', dStr: 'M100,12 L75,100', xInt: 78, yInt: 62, lineCss: dashCss }
+            ]
+        },
+        section: {
+            sideArr: [
+                { dStr: 'M45,80 L100,10 L155,80 Z' },
+                { dStr: 'M5,80 H29 M58.5,80 H195' },
+                { dStr: 'M39.5,80 H160.5 V84.4 H39.5 Z' },
+                { dStr: 'M52,80 L100,19 L148,80', lineCss: dashCss },
+                { dStr: 'M83,84.4 V112 H117 V84.4' },
+                { dStr: 'M86.3,86.6 H113.8 V108.6 H86.3 Z' },
+                { dStr: 'M29,80 L86.3,108.6 M58.5,80 L86.3,93.9' }
+            ],
+            labelArr: [
+                { labelStr: 'casing', xInt: 150, yInt: 40, labelCss: smallCss },
+                { labelStr: 'core', xInt: 100, yInt: 62, labelCss: smallCss },
+                { labelStr: 'chamber', xInt: 145, yInt: 104, labelCss: smallCss },
+                { labelStr: 'passage', xInt: 24, yInt: 100, labelCss: smallCss },
+                { labelStr: 'raft', xInt: 175, yInt: 92, labelCss: smallCss }
+            ]
+        },
+        platform: {
+            sideArr: [
+                { dStr: 'M5,108 H195' },
+                { dStr: 'M45,108 L91.7,48.6 H108.3 L155,108' },
+                { dStr: 'M91.7,48.6 L100,38 L108.3,48.6', lineCss: hiddenCss },
+                { dStr: 'M91.7,48.6 V37.6 H108.3' },
+                { dStr: 'M108.3,48.6 L182.6,108 M108.3,37.6 L182.6,97' },
+                { dStr: 'M100,32.8 A2,2 0 1 0 100,28.8 A2,2 0 1 0 100,32.8' },
+                { dStr: 'M100,32.8 V41.5 L97,48.6 M100,41.5 L103,48.6 M96,36 H104' }
+            ],
+            labelArr: [
+                { labelStr: 'platform', xInt: 60, yInt: 40, labelCss: smallCss },
+                { labelStr: 'stair', xInt: 180, yInt: 80, labelCss: smallCss }
+            ]
+        },
+        block: {
+            sideArr: [
+                { dStr: 'M20,102 V70 H33.6 V63.6 H46.4 V70 H73.6 V63.6 H86.4 V70 H100 V102 Z' },
+                { dStr: 'M100,102 V70 H113.6 V63.6 H126.4 V70 H153.6 V63.6 H166.4 V70 H180 V102 Z' },
+                { dStr: `M60,70 H72.8 V62.8 H87.2 V70 H112.8 V62.8 H127.2 V70 H140 V38
+                    H126.4 V31.6 H113.6 V38 H86.4 V31.6 H73.6 V38 H60 Z` }
+            ],
+            labelArr: [
+                { labelStr: 'nub', xInt: 40, yInt: 58, labelCss: smallCss },
+                { labelStr: 'socket', xInt: 162, yInt: 50, labelCss: smallCss },
+                { labelStr: '500 × 250 × 200 mm', xInt: 100, yInt: 116, labelCss: smallCss }
+            ]
+        },
+        steps: {
+            sideArr: [
+                {
+                    sideStr: 'b',
+                    dStr: 'M20,105 V85 H40 V65 H60 V45 H80 V25 H120 V45 H140 V65 H160 V85 H180 V105 Z',
+                    xInt: 100,
+                    yInt: 114
+                },
+                { dStr: 'M20,105 L100,25 L180,105', lineCss: hiddenCss }
+            ],
+            labelArr: [{ labelStr: 'h/n', xInt: 191, yInt: 95, labelCss: smallCss }]
+        },
+        inertia: {
+            sideArr: [
+                { dStr: 'M10,100 H190' },
+                { sideStr: 'm', dStr: 'M75,62 H125 V100 H75 Z', xInt: 100, yInt: 83 },
+                { sideStr: 'F', dStr: arrowFn(75, 81, 35, 81), xInt: 50, yInt: 71 },
+                { sideStr: 'F', dStr: arrowFn(125, 81, 165, 81), xInt: 150, yInt: 71 }
+            ],
+            labelArr: [{ labelStr: 'ΣF = 0, so v stays the same', xInt: 100, yInt: 40, labelCss: smallCss }]
+        },
+        force: {
+            sideArr: [
+                { dStr: 'M10,100 H190' },
+                { sideStr: 'm', dStr: 'M80,62 H130 V100 H80 Z', xInt: 105, yInt: 83 },
+                { sideStr: 'F', dStr: arrowFn(25, 81, 78, 81), xInt: 48, yInt: 71 },
+                { sideStr: 'a', dStr: arrowFn(85, 48, 140, 48), xInt: 112, yInt: 37, lineCss: dashCss }
+            ]
+        },
+        pair: {
+            sideArr: [
+                { dStr: 'M10,100 H190' },
+                { sideStr: 'A', dStr: 'M40,64 H100 V100 H40 Z', xInt: 70, yInt: 84 },
+                { sideStr: 'B', dStr: 'M100,56 H160 V100 H100 Z', xInt: 130, yInt: 80 },
+                { sideStr: 'F', dStr: arrowFn(104, 40, 148, 40), xInt: 126, yInt: 29 },
+                { sideStr: '−F', dStr: arrowFn(96, 40, 52, 40), xInt: 74, yInt: 29 }
+            ]
+        },
+        squares: {
+            sideArr: [
+                { dStr: 'M80,76 H120 V46 Z' },
+                { dStr: 'M80,76 V116 H120 V76' },
+                { dStr: 'M120,76 H150 V46 H120' },
+                { dStr: 'M80,76 L50,36 L90,6 L120,46' }
+            ],
+            markStr: 'M112,76 V68 H120',
+            labelArr: [
+                { labelStr: 'a²', xInt: 100, yInt: 98 },
+                { labelStr: 'b²', xInt: 135, yInt: 61 },
+                { labelStr: 'c²', xInt: 85, yInt: 41 }
+            ]
+        },
+        circle: {
+            sideArr: [
+                { dStr: 'M44,62 H156 M100,8 V116', lineCss: hiddenCss },
+                { dStr: 'M148,62 A48,48 0 1 1 52,62 A48,48 0 1 1 148,62' },
+                { sideStr: '1', dStr: 'M100,62 L136.8,31.1', xInt: 112, yInt: 40 },
+                { dStr: 'M100,62 H136.8' },
+                { dStr: 'M136.8,62 V31.1' }
+            ],
+            markStr: 'M114,62 A14,14 0 0 0 110.7,53',
+            labelArr: [
+                { labelStr: 'θ', xInt: 122, yInt: 56 },
+                { labelStr: 'cos θ', xInt: 118, yInt: 73, labelCss: smallCss },
+                { labelStr: 'sin θ', xInt: 162, yInt: 47, labelCss: smallCss }
+            ]
+        },
+        cosines: {
+            sideArr: [
+                { sideStr: 'b', dStr: 'M40,100 H165', xInt: 102, yInt: 112 },
+                { sideStr: 'a', dStr: 'M40,100 L110,25', xInt: 66, yInt: 57 },
+                { sideStr: 'c', dStr: 'M165,100 L110,25', xInt: 146, yInt: 57 }
+            ],
+            markStr: 'M58,100 A18,18 0 0 0 52.3,86.8',
+            labelArr: [{ labelStr: 'γ', xInt: 65, yInt: 91 }]
+        },
+        lever: {
+            sideArr: [
+                { dStr: 'M20,96 H180', lineCss: thickCss },
+                { dStr: 'M100,98 L93,110 H107 Z' },
+                { sideStr: 'F₁', dStr: arrowFn(40, 58, 40, 92), xInt: 40, yInt: 49 },
+                { sideStr: 'F₂', dStr: arrowFn(150, 70, 150, 92), xInt: 150, yInt: 61 },
+                { sideStr: 'd₁', dStr: 'M40,116 H100', xInt: 70, yInt: 107, lineCss: dashCss },
+                { sideStr: 'd₂', dStr: 'M100,116 H150', xInt: 125, yInt: 107, lineCss: dashCss }
+            ]
+        },
+        buoyancy: {
+            sideArr: [
+                { dStr: 'M10,30 V110 H190 V30' },
+                { dStr: 'M10,52 H190', lineCss: dashCss },
+                { dStr: 'M80,36 H120 V76 H80 Z' },
+                { sideStr: 'W', dStr: arrowFn(100, 6, 100, 34), xInt: 112, yInt: 15 },
+                { sideStr: 'F', dStr: arrowFn(100, 106, 100, 78), xInt: 112, yInt: 98 }
+            ],
+            labelArr: [{ labelStr: 'water', xInt: 42, yInt: 66, labelCss: smallCss }]
+        },
+        spring: {
+            sideArr: [
+                { dStr: 'M20,30 V100', lineCss: thickCss },
+                { dStr: 'M20,65 H35 L42,55 L52,75 L62,55 L72,75 L82,55 L92,75 L99,65 H110' },
+                { dStr: 'M110,50 H140 V80 H110 Z' },
+                { sideStr: 'F', dStr: arrowFn(140, 65, 182, 65), xInt: 162, yInt: 55 },
+                { sideStr: 'x', dStr: 'M110,96 H140 M110,90 V102 M140,90 V102', xInt: 125, yInt: 110 }
+            ]
+        },
+        cantilever: {
+            sideArr: [
+                { dStr: 'M30,20 V110', lineCss: thickCss },
+                { dStr: 'M30,50 H170' },
+                { dStr: 'M30,50 Q110,52 170,72', lineCss: dashCss },
+                { sideStr: 'F', dStr: arrowFn(170, 10, 170, 46), xInt: 182, yInt: 22 },
+                { sideStr: 'L', dStr: 'M30,96 H170 M30,90 V102 M170,90 V102', xInt: 100, yInt: 108 },
+                { sideStr: 'δ', dStr: 'M184,50 V72', xInt: 193, yInt: 61 }
+            ]
+        },
+        snell: {
+            sideArr: [
+                { dStr: 'M10,60 H190' },
+                { dStr: 'M100,10 V110', lineCss: dashCss },
+                { dStr: 'M45,12 L100,60' },
+                { dStr: 'M100,60 L128,110' }
+            ],
+            labelArr: [
+                { labelStr: 'θ₁', xInt: 90, yInt: 34 },
+                { labelStr: 'θ₂', xInt: 111, yInt: 90 },
+                { labelStr: 'n₁', xInt: 28, yInt: 46, labelCss: smallCss },
+                { labelStr: 'n₂', xInt: 28, yInt: 76, labelCss: smallCss }
+            ]
+        },
+        circuit: {
+            sideArr: [
+                { dStr: 'M40,30 H70 M130,30 H160 V90 H110 M90,90 H40 V30' },
+                {
+                    sideStr: 'R',
+                    dStr: 'M70,30 L75,22 L85,38 L95,22 L105,38 L115,22 L125,38 L130,30',
+                    xInt: 100,
+                    yInt: 11
+                },
+                { sideStr: 'V', dStr: 'M90,80 V100 M110,84 V96', xInt: 100, yInt: 112 },
+                { sideStr: 'I', dStr: arrowFn(160, 48, 160, 72), xInt: 172, yInt: 60 }
+            ]
+        }
     };
-    let { sideMatrix, markStr, labelMatrix } = figureObj[nameStr];
-    let svgEl = this.svg({ attr: { viewBox: '0 0 200 120' }, css: { margin: '0 auto', width: '200px', fontSize: '17px',
-        fontFamily: "'Noto Serif', 'Cambria Math', 'Times New Roman', serif", fontStyle: 'italic' } });
-
-    // Sides
-    sideMatrix.forEach(([sideStr, dStr, xInt, yInt, lineCss = {}]) => {
-        let fadeBool = boldArr.length > 0 && !boldArr.includes(sideStr);
-        let opacityFlt = fadeBool ? 0.35 : 1;
-        let widthStr = !boldArr.length ? '2' : fadeBool ? '1.2' : '3.5';
-        svgEl.add(this.path({ attr: { d: dStr }, css: { strokeWidth: widthStr, opacity: opacityFlt,
-            ...lineCss } }));
-        if (sideStr) {
-            svgEl.add(this.svgText({ attr: { x: xInt, y: yInt }, textContent: sideStr,
-                css: { opacity: opacityFlt } }));
+    let shapeObj = figureObj[nameStr];
+    let svgEl = this.svg({
+        attr: { viewBox: '0 0 200 120' },
+        css: {
+            margin: '0 auto',
+            width: '200px',
+            fontSize: '17px',
+            fontFamily: "'Noto Serif', 'Cambria Math', 'Times New Roman', serif",
+            fontStyle: 'italic'
         }
     });
-
-    // Marks and labels
-    svgEl.add(this.path({ attr: { d: markStr } }));
-    labelMatrix.forEach(([labelStr, xInt, yInt, labelCss = {}]) => svgEl.add(this.svgText({ attr: { x: xInt, y: yInt },
-        textContent: labelStr, css: labelCss })));
+    for (let sideObj of shapeObj.sideArr) {
+        let sideStr = sideObj.sideStr;
+        let fadeBool = boldArr.length > 0 && !boldArr.includes(sideStr);
+        let opacityFlt = fadeBool ? 0.35 : 1;
+        let widthStr = '2';
+        if (boldArr.length) {
+            widthStr = fadeBool ? '1.2' : '3.5';
+        }
+        let pathEl = this.path({
+            attr: { d: sideObj.dStr },
+            css: { strokeWidth: widthStr, opacity: opacityFlt }
+        });
+        Core.copyCss(sideObj.lineCss, pathEl);
+        svgEl.add(pathEl);
+        if (sideStr) {
+            svgEl.add(this.svgText({
+                attr: { x: sideObj.xInt, y: sideObj.yInt },
+                textContent: sideStr,
+                css: { opacity: opacityFlt }
+            }));
+        }
+    }
+    if (shapeObj.markStr) {
+        svgEl.add(this.path({ attr: { d: shapeObj.markStr } }));
+    }
+    if (shapeObj.labelArr) {
+        for (let labelObj of shapeObj.labelArr) {
+            svgEl.add(this.svgText({
+                attr: { x: labelObj.xInt, y: labelObj.yInt },
+                textContent: labelObj.labelStr,
+                css: labelObj.labelCss
+            }));
+        }
+    }
     return svgEl;
 };
 
@@ -314,8 +490,8 @@ Page.prototype.paragraph = function(paragraphStr) {
         Core.copyCss({ textAlign: 'center', margin: '10px 0' }, paragraphEl);
         paragraphEl.add(this.math(paragraphStr.slice(2, -2)));
     } else if (paragraphStr.startsWith('△')) {
-        let [, nameStr, ...boldArr] = paragraphStr.split(' ');
-        paragraphEl.add(this.figure(nameStr, boldArr));
+        let wordArr = paragraphStr.split(' ');
+        paragraphEl.add(this.figure(wordArr[1], wordArr.slice(2)));
     } else {
         paragraphEl.add(this.markdown(paragraphStr));
     }
