@@ -131,3 +131,13 @@ window.Element.prototype.hide = function() {
     this.style.display = 'none';
     return this;
 };
+
+window.Element.prototype.visible = function() {
+    this.style.visibility = 'visible';
+    return this;
+};
+
+window.Element.prototype.invisible = function() {
+    this.style.visibility = 'hidden';
+    return this;
+};
