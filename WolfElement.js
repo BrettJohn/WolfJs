@@ -1,4 +1,4 @@
-class Element extends Theme {
+class WolfElement extends Theme {
     configurePage(obj) {
         this.configureTheme();
         Core.objCopy(obj, this);

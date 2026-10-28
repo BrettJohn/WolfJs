@@ -110,12 +110,12 @@ class Core {
     }
 }
 
-window.Element.prototype.css = function(cssObj) {
+Element.prototype.css = function(cssObj) {
     Core.copyCss(cssObj, this);
     return this;
 };
 
-window.Element.prototype.show = function(displayStr) {
+Element.prototype.show = function(displayStr) {
     if (!Is.blank(displayStr)) {
         this.style.display = displayStr;
     } else if (this.style.display === 'none') {
@@ -124,7 +124,7 @@ window.Element.prototype.show = function(displayStr) {
     return this;
 };
 
-window.Element.prototype.hide = function() {
+Element.prototype.hide = function() {
     if (this.style.display !== 'none') {
         this.shownDisplayStr = this.style.display;
     }
@@ -132,12 +132,12 @@ window.Element.prototype.hide = function() {
     return this;
 };
 
-window.Element.prototype.visible = function() {
+Element.prototype.visible = function() {
     this.style.visibility = 'visible';
     return this;
 };
 
-window.Element.prototype.invisible = function() {
+Element.prototype.invisible = function() {
     this.style.visibility = 'hidden';
     return this;
 };

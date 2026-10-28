@@ -1,4 +1,4 @@
-class Page extends Element {
+class Page extends WolfElement {
     arrowPager(pagerEl, stepFn, defaultBool = false) {
         let pagerObj = { pagerEl, stepFn };
         if (defaultBool) {
