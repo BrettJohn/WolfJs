@@ -115,8 +115,12 @@ window.Element.prototype.css = function(cssObj) {
     return this;
 };
 
-window.Element.prototype.show = function(displayStr = this.shownDisplayStr ?? '') {
-    this.style.display = displayStr;
+window.Element.prototype.show = function(displayStr) {
+    if (!Is.blank(displayStr)) {
+        this.style.display = displayStr;
+    } else if (this.style.display === 'none') {
+        this.style.display = this.shownDisplayStr ?? '';
+    }
     return this;
 };
 
