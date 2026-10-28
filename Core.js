@@ -115,12 +115,15 @@ window.Element.prototype.css = function(cssObj) {
     return this;
 };
 
-window.Element.prototype.show = function(displayStr = '') {
+window.Element.prototype.show = function(displayStr = this.shownDisplayStr ?? '') {
     this.style.display = displayStr;
     return this;
 };
 
 window.Element.prototype.hide = function() {
+    if (this.style.display !== 'none') {
+        this.shownDisplayStr = this.style.display;
+    }
     this.style.display = 'none';
     return this;
 };
