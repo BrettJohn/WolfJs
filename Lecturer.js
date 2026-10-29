@@ -364,14 +364,22 @@ class Lecturer {
         }
 
         // Chunks
+        let spokenSymbolObj = this.spokenSymbolObj();
+        let spokenUnitObj = this.spokenUnitObj();
         let wordStartArr = [];
         let chunkArr = [];
         let chunkObj = null;
         let lastBlockEl = null;
         let emphasisInt = 0;
         let totalInt = 0;
-        for (let wordSpan of wordSpanArr) {
+        let pauseNextBool = false;
+        for (let i = 0; i < wordSpanArr.length; i++) {
+            let wordSpan = wordSpanArr[i];
+            let nextSpan = wordSpanArr[i + 1];
+            let prevSpan = wordSpanArr[i - 1];
             let wordStr = wordSpan.textContent;
+            let nextStr = nextSpan ? nextSpan.textContent : '';
+            let prevStr = prevSpan ? prevSpan.textContent : '';
             let blockEl = wordSpan.blockEl;
             if (blockEl !== lastBlockEl) {
                 let lastChunkObj = chunkArr[chunkArr.length - 1];
@@ -387,12 +395,43 @@ class Lecturer {
                 chunkObj = null;
                 lastBlockEl = blockEl;
             }
-            if (/^[·•|–—]$/.test(wordStr)) {
-                wordStartArr.push(totalInt);
-                if (chunkObj) {
-                    chunkObj.pauseMsFlt = 300;
+            let separatorBool = /^[·•|–—]$/.test(wordStr);
+            let spokenStr = separatorBool ? '' : wordStr;
+            let unitMatchArr = /^([\d.,]*\d)?(.+?)([.,;:!?)]*)$/.exec(wordStr);
+            let numberStr = unitMatchArr[1];
+            let unitKeyStr = unitMatchArr[2];
+            let unitPairArr = spokenUnitObj[unitKeyStr];
+            let countStr = numberStr || prevStr;
+            let attachedLetterBool = !Is.blank(numberStr) && unitKeyStr.length < 2;
+            if (unitPairArr && !attachedLetterBool && /\d$/.test(countStr)) {
+                let oneBool = /(^|[^\d.,])1$/.test(countStr);
+                let unitStr = oneBool ? unitPairArr[0] : unitPairArr[1];
+                let tailStr = unitMatchArr[3];
+                spokenStr = numberStr ? `${numberStr} ${unitStr}${tailStr}` : `${unitStr}${tailStr}`;
+            }
+            let letterPluralArr = /^([B-HJ-TV-Z]|[A-Z][A-Za-z]*[A-Z])s([.,;:!?)]*)$/.exec(spokenStr);
+            if (letterPluralArr) {
+                spokenStr = `${letterPluralArr[1]}'s${letterPluralArr[2]}`;
+            }
+            let pauseBool = false;
+            for (let symbolStr in spokenSymbolObj) {
+                let sayStr = spokenSymbolObj[symbolStr];
+                if (wordStr.includes(symbolStr) && sayStr.endsWith(',')) {
+                    pauseBool = true;
                 }
+                spokenStr = spokenStr.replaceAll(symbolStr, sayStr);
+            }
+            spokenStr = spokenStr.trim();
+            if (/^A[.)]$/.test(spokenStr) || spokenStr === 'A' && /^(is|was|and|or)\b/i.test(nextStr)) {
+                spokenStr = 'A,';
+            }
+            if (chunkObj && (separatorBool || pauseBool || pauseNextBool)) {
+                chunkObj.pauseMsFlt = 300;
                 chunkObj = null;
+            }
+            pauseNextBool = pauseBool;
+            if (Is.blank(spokenStr)) {
+                wordStartArr.push(totalInt);
                 continue;
             }
             if (!chunkObj) {
@@ -400,8 +439,8 @@ class Lecturer {
                 chunkArr.push(chunkObj);
             }
             wordStartArr.push(totalInt);
-            chunkObj.textStr += `${wordStr} `;
-            totalInt += wordStr.length + 1;
+            chunkObj.textStr += `${spokenStr} `;
+            totalInt += spokenStr.length + 1;
             let chunkStr = chunkObj.textStr;
             if (/[.!?:;]$/.test(wordStr) || chunkStr.length > 180) {
                 chunkObj = null;
@@ -412,6 +451,59 @@ class Lecturer {
         this.chunkArr = chunkArr;
         this.boundaryBool = false;
         await this.speakChunks();
+    }
+
+    spokenUnitObj() {
+        return {
+            mm: ['millimetre', 'millimetres'],
+            cm: ['centimetre', 'centimetres'],
+            m: ['metre', 'metres'],
+            km: ['kilometre', 'kilometres'],
+            'cm²': ['square centimetre', 'square centimetres'],
+            'm²': ['square metre', 'square metres'],
+            'km²': ['square kilometre', 'square kilometres'],
+            'cm³': ['cubic centimetre', 'cubic centimetres'],
+            'm³': ['cubic metre', 'cubic metres'],
+            mg: ['milligram', 'milligrams'],
+            g: ['gram', 'grams'],
+            kg: ['kilogram', 'kilograms'],
+            ml: ['millilitre', 'millilitres'],
+            l: ['litre', 'litres'],
+            L: ['litre', 'litres'],
+            s: ['second', 'seconds'],
+            min: ['minute', 'minutes'],
+            h: ['hour', 'hours'],
+            'km/h': ['kilometre per hour', 'kilometres per hour'],
+            'm/s': ['metre per second', 'metres per second'],
+            'm/s²': ['metre per second squared', 'metres per second squared'],
+            '°C': ['degree Celsius', 'degrees Celsius'],
+            '°F': ['degree Fahrenheit', 'degrees Fahrenheit'],
+            W: ['watt', 'watts'],
+            kW: ['kilowatt', 'kilowatts'],
+            kWh: ['kilowatt hour', 'kilowatt hours'],
+            V: ['volt', 'volts'],
+            Hz: ['hertz', 'hertz'],
+            N: ['newton', 'newtons'],
+            J: ['joule', 'joules'],
+            kPa: ['kilopascal', 'kilopascals']
+        };
+    }
+
+    spokenSymbolObj() {
+        return {
+            '✓': 'right,',
+            '✔': 'right,',
+            '✗': 'wrong,',
+            '✘': 'wrong,',
+            '→': ' to ',
+            '←': '',
+            '○': '',
+            '●': '',
+            '…': '',
+            '²': ' squared',
+            '³': ' cubed',
+            '⁻¹': ' inverse'
+        };
     }
 
     async speakChunks() {

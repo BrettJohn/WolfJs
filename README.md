@@ -89,8 +89,10 @@ page and set `lecturerObj.onShowFn` to relayout when it opens or closes. `lectur
 speak icon for the top-right corner of a `position: relative` holder (leave room for it); a click reads `readElArr`
 with the browser's voice, highlighting each word and moving the lips. It reads block by block: headings speak slower
 and lower the higher their level (a bold block counts as a small heading), and every block ends with a pause, longer
-after a heading. Sliders under the face set volume and speed; they and ♀/♂ are remembered in the browser. With no
-voice on the device it reads along without sound. For another voice, override `prepareVoice()`,
+after a heading. Symbols are said as words (✗ as "wrong", x² as "x squared"), units after a number in full
+("200 mm" as "200 millimetres") and letter plurals as letters ("Ds" as "D's"); override `spokenSymbolObj()` and
+`spokenUnitObj()` to change them. Sliders under the face set volume and speed; they and ♀/♂ are remembered in the
+browser. With no voice on the device it reads along without sound. For another voice, override `prepareVoice()`,
 `speakChunk(chunkObj)`, `chunkChar(nowFlt)` and `applySliders()` in a subclass. Its look comes from `speakBtnCss`,
 `spokenWordCss`, `lecturerPanelCss` and `lecturerThemeObj`.
 
