@@ -364,14 +364,19 @@ class Lecturer {
         }
 
         // Chunks
+        let spokenSymbolObj = this.spokenSymbolObj();
         let wordStartArr = [];
         let chunkArr = [];
         let chunkObj = null;
         let lastBlockEl = null;
         let emphasisInt = 0;
         let totalInt = 0;
-        for (let wordSpan of wordSpanArr) {
+        let pauseNextBool = false;
+        for (let i = 0; i < wordSpanArr.length; i++) {
+            let wordSpan = wordSpanArr[i];
+            let nextSpan = wordSpanArr[i + 1];
             let wordStr = wordSpan.textContent;
+            let nextStr = nextSpan ? nextSpan.textContent : '';
             let blockEl = wordSpan.blockEl;
             if (blockEl !== lastBlockEl) {
                 let lastChunkObj = chunkArr[chunkArr.length - 1];
@@ -387,12 +392,27 @@ class Lecturer {
                 chunkObj = null;
                 lastBlockEl = blockEl;
             }
-            if (/^[·•|–—]$/.test(wordStr)) {
-                wordStartArr.push(totalInt);
-                if (chunkObj) {
-                    chunkObj.pauseMsFlt = 300;
+            let separatorBool = /^[·•|–—]$/.test(wordStr);
+            let spokenStr = separatorBool ? '' : wordStr;
+            let pauseBool = false;
+            for (let symbolStr in spokenSymbolObj) {
+                let sayStr = spokenSymbolObj[symbolStr];
+                if (wordStr.includes(symbolStr) && sayStr.endsWith(',')) {
+                    pauseBool = true;
                 }
+                spokenStr = spokenStr.replaceAll(symbolStr, sayStr);
+            }
+            spokenStr = spokenStr.trim();
+            if (/^A[.)]$/.test(spokenStr) || spokenStr === 'A' && /^(is|was|and|or)\b/i.test(nextStr)) {
+                spokenStr = 'A,';
+            }
+            if (chunkObj && (separatorBool || pauseBool || pauseNextBool)) {
+                chunkObj.pauseMsFlt = 300;
                 chunkObj = null;
+            }
+            pauseNextBool = pauseBool;
+            if (Is.blank(spokenStr)) {
+                wordStartArr.push(totalInt);
                 continue;
             }
             if (!chunkObj) {
@@ -400,8 +420,8 @@ class Lecturer {
                 chunkArr.push(chunkObj);
             }
             wordStartArr.push(totalInt);
-            chunkObj.textStr += `${wordStr} `;
-            totalInt += wordStr.length + 1;
+            chunkObj.textStr += `${spokenStr} `;
+            totalInt += spokenStr.length + 1;
             let chunkStr = chunkObj.textStr;
             if (/[.!?:;]$/.test(wordStr) || chunkStr.length > 180) {
                 chunkObj = null;
@@ -412,6 +432,23 @@ class Lecturer {
         this.chunkArr = chunkArr;
         this.boundaryBool = false;
         await this.speakChunks();
+    }
+
+    spokenSymbolObj() {
+        return {
+            '✓': 'right,',
+            '✔': 'right,',
+            '✗': 'wrong,',
+            '✘': 'wrong,',
+            '→': ' to ',
+            '←': '',
+            '○': '',
+            '●': '',
+            '…': '',
+            '²': ' squared',
+            '³': ' cubed',
+            '⁻¹': ' inverse'
+        };
     }
 
     async speakChunks() {
