@@ -28,4 +28,9 @@ Base.prototype.defaultTheme = function() {
     this.backCss = { backgroundImage: "url('Assets/Images/back.png')", backgroundSize: 'cover' };
     this.logoSrcStr = 'Assets/Images/logo.png';
     this.titleImgPathStr = 'Assets/Images/main.png';
+    this.inputThemeCss = {};
+    this.buttonHoverThemeCss = {};
+    this.dropdownThemeCss = {};
+    this.gridThemeCss = {};
+    this.toggleThemeCss = {};
 }

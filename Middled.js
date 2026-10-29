@@ -12,7 +12,7 @@ class Middled extends Container {
         document.addEventListener('keydown', (event) => {
             let dropdownOpenBool = typeof openDropdownArr !== 'undefined' && openDropdownArr.length;
             if (event.key === 'Escape' && !event.defaultPrevented && !this.popupArr?.length && !dropdownOpenBool) {
-                Core.goto(this.doneUrl?.() ?? 'Index.php');
+                Core.goto(this.doneUrl());
             }
         });
     }
@@ -45,6 +45,10 @@ class Middled extends Container {
     }
 
     async complete() {}
+
+    doneUrl() {
+        return 'Index.php';
+    }
 
     btnRow(elArr, css = {}) {
         let midCol = this.col6();

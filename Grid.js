@@ -17,22 +17,22 @@ Page.prototype.dataGrid = async function(Operation, controllerStr, obj = {}) {
         controlHeight: '34px',
         ...this.gridThemeCss
     };
-    themeObj.controlCss = { height: themeObj.controlHeight, margin: 0, ...this.gridThemeCss?.controlCss };
-    themeObj.buttonCss = { ...themeObj.controlCss, ...this.gridThemeCss?.buttonCss };
+    themeObj.controlCss = { height: themeObj.controlHeight, margin: 0, ...this.gridThemeCss.controlCss };
+    themeObj.buttonCss = { ...themeObj.controlCss, ...this.gridThemeCss.buttonCss };
     themeObj.headCss = {
         fontSize: '16px',
         letterSpacing: '1px',
         textTransform: 'uppercase',
         padding: '14px 8px',
         borderBottom: '2px solid ' + this.color2,
-        ...this.gridThemeCss?.headCss
+        ...this.gridThemeCss.headCss
     };
     themeObj.cellCss = {
         border: 'none',
         borderBottom: '1px solid rgba(255,255,255,0.07)',
         padding: '14px 8px',
         fontSize: '19px',
-        ...this.gridThemeCss?.cellCss
+        ...this.gridThemeCss.cellCss
     };
     if (!this.dataGridCssAddedBool) {
         this.dataGridCssAddedBool = true;

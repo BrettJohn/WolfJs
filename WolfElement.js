@@ -1,4 +1,7 @@
 class WolfElement extends Theme {
+    headEl;
+    colSize;
+
     configurePage(obj) {
         this.configureTheme();
         Core.objCopy(obj, this);
