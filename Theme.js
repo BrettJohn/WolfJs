@@ -111,3 +111,61 @@ Base.prototype.gridHeadCss = function() {
 Base.prototype.gridCellCss = function() {
     return { border: 'none', borderBottom: '1px solid rgba(255,255,255,0.07)', padding: '14px 8px', fontSize: '19px' };
 }
+
+Base.prototype.speakBtnCss = function() {
+    return {
+        position: 'absolute',
+        top: '6px',
+        right: '6px',
+        display: 'inline-flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: '24px',
+        height: '24px',
+        borderRadius: '50%',
+        cursor: 'pointer',
+        color: 'inherit',
+        opacity: 0.75,
+        backgroundColor: 'rgba(127, 127, 127, 0.15)'
+    };
+}
+
+Base.prototype.spokenWordCss = function() {
+    return { backgroundColor: 'rgba(255, 200, 60, 0.45)', borderRadius: '3px' };
+}
+
+Base.prototype.lecturerPanelCss = function() {
+    return {
+        boxSizing: 'border-box',
+        padding: '10px',
+        borderRadius: '14px',
+        color: this.color1,
+        backgroundColor: 'rgba(0, 0, 0, 0.75)',
+        border: '1px solid rgba(255, 255, 255, 0.14)',
+        boxShadow: '0 10px 30px rgba(0, 0, 0, 0.6)',
+        transformOrigin: 'bottom right',
+        transition: 'transform .25s, opacity .25s'
+    };
+}
+
+Base.prototype.sliderThemeObj = function() {
+    return {
+        fillColor: this.glowColor,
+        trackColor: 'rgba(127, 127, 127, 0.3)',
+        thumbColor: '#FFFFFF',
+        heightStr: '6px',
+        thumbStr: '16px'
+    };
+}
+
+Base.prototype.lecturerThemeObj = function() {
+    return {
+        skinArr: [0.86, 0.66, 0.53],
+        noseArr: [0.82, 0.6, 0.48],
+        eyeArr: [0.96, 0.96, 0.95],
+        pupilArr: [0.14, 0.11, 0.1],
+        mouthArr: [0.3, 0.07, 0.09],
+        femaleObj: { hairArr: [0.36, 0.2, 0.1], lipArr: [0.8, 0.34, 0.4], shirtArr: [0.62, 0.3, 0.55] },
+        maleObj: { hairArr: [0.17, 0.12, 0.1], lipArr: [0.7, 0.43, 0.4], shirtArr: [0.24, 0.32, 0.46] }
+    };
+}
