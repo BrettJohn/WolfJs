@@ -45,6 +45,8 @@ class MiddledController extends Middled {
         cancelBtn.onclick = () => popup.remove();
     }
 
+    async delete() {}
+
     saveResult(resultObj, p = '', urlStr = 'Index.php') {
         if (p === '' && resultObj.saveResult === 'Success') {
             Core.goto(urlStr);

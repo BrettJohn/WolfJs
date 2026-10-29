@@ -184,6 +184,8 @@ class Page extends WolfElement {
 
     async checkUser() {}
 
+    rowElement() {}
+
     inputRow(html, inputEl, rowEl = null) {
         let rowObj = { css: { paddingBottom: '20px' } };
         let nameObj = { html, css: { ...this.inputLabelCss, paddingRight: '15px' } };
