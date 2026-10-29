@@ -29,3 +29,85 @@ Base.prototype.defaultTheme = function() {
     this.logoSrcStr = 'Assets/Images/logo.png';
     this.titleImgPathStr = 'Assets/Images/main.png';
 }
+
+Base.prototype.inputCss = function() {
+    return {
+        display: 'inline-block',
+        margin: '0px',
+        padding: '0px 0px 0px 5px',
+        height: '28px',
+        color: this.color7,
+        background: this.color9,
+        border: '0.25px solid ' + this.color2,
+        boxShadow: 'inset 0px 4px 4px rgba(0, 0, 0, 0.25)',
+        borderRadius: '5px'
+    };
+}
+
+Base.prototype.buttonHoverCss = function() {
+    return { backgroundColor: this.color2, color: this.color1 };
+}
+
+Base.prototype.dropdownThemeObj = function() {
+    return {
+        btnBack: this.color9,
+        btnOpenBack: this.color11,
+        btnColor: this.color7,
+        listBack: this.color9,
+        optionBack: this.color11,
+        optionColor: this.color7,
+        optionSelectedBorder: '1px solid ' + this.color2
+    };
+}
+
+Base.prototype.toggleThemeObj = function() {
+    return {
+        back: 'rgba(255, 255, 255, 0.05)',
+        color: 'rgba(255, 255, 255, 0.35)',
+        border: '1px solid rgba(255, 255, 255, 0.15)',
+        selectedBack: this.color4,
+        selectedColor: this.color1,
+        selectedOutline: '1px dashed ' + this.color2
+    };
+}
+
+Base.prototype.gridThemeObj = function() {
+    return {
+        controlsColor: this.color1,
+        controlsBack: 'rgba(0,0,0,0.75)',
+        controlsDivider: '1px solid rgba(255,255,255,0.12)',
+        rowBack: 'rgba(0,0,0,0.6)',
+        rowColor: this.color1,
+        headBack: 'rgba(0,0,0,0.85)',
+        headColor: 'rgba(255,255,255,0.75)',
+        headBorder: 'none',
+        radius: '6px',
+        controlsRadius: '5px',
+        border: '1px solid rgba(255,255,255,0.14)',
+        shadow: '0 10px 30px rgba(0,0,0,0.6)',
+        hoverBack: `color-mix(in srgb, ${this.color2} 25%, transparent)`,
+        hoverColor: '#fff'
+    };
+}
+
+Base.prototype.gridControlCss = function() {
+    return { height: '34px', margin: 0 };
+}
+
+Base.prototype.gridButtonCss = function() {
+    return this.gridControlCss();
+}
+
+Base.prototype.gridHeadCss = function() {
+    return {
+        fontSize: '16px',
+        letterSpacing: '1px',
+        textTransform: 'uppercase',
+        padding: '14px 8px',
+        borderBottom: '2px solid ' + this.color2
+    };
+}
+
+Base.prototype.gridCellCss = function() {
+    return { border: 'none', borderBottom: '1px solid rgba(255,255,255,0.07)', padding: '14px 8px', fontSize: '19px' };
+}

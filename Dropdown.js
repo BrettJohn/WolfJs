@@ -13,17 +13,7 @@ Page.prototype.dropdown = function(
     let ddObj = {};
     let triangleDownStr = ' \u25BE';
     let listBtnDiv = this.div();
-    let themeObj = {
-        btnBack: this.color9,
-        btnOpenBack: this.color11,
-        btnColor: this.color7,
-        listBack: this.color9,
-        optionBack: this.color11,
-        optionColor: this.color7,
-        optionSelectedBorder: '1px solid ' + this.color2,
-        ...this.dropdownThemeCss,
-        ...obj.themeCss
-    };
+    let themeObj = { ...this.dropdownThemeObj(), ...obj.themeCss };
     obj.css = {
         ...obj.css,
         position: 'relative',

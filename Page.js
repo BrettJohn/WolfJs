@@ -1,4 +1,10 @@
 class Page extends WolfElement {
+    containerEl;
+    popupArr;
+    inputLabelCss;
+    passwordInput;
+    confirmPasswordInput;
+
     arrowPager(pagerEl, stepFn, defaultBool = false) {
         let pagerObj = { pagerEl, stepFn };
         if (defaultBool) {

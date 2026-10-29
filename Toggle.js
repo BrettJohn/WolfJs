@@ -1,14 +1,5 @@
 Page.prototype.toggle = function(obj, optionArr, onchangeFn = null) {
-    let defaultThemeObj = {
-        back: 'rgba(255, 255, 255, 0.05)',
-        color: 'rgba(255, 255, 255, 0.35)',
-        border: '1px solid rgba(255, 255, 255, 0.15)',
-        selectedBack: this.color4,
-        selectedColor: this.color1,
-        selectedOutline: '1px dashed ' + this.color2,
-        ...this.toggleThemeCss,
-        ...obj.themeCss
-    };
+    let defaultThemeObj = { ...this.toggleThemeObj(), ...obj.themeCss };
     let toggleObj = { selectedItem: null, btnArr: [] };
     toggleObj.div = this.row({ css: { flexWrap: 'nowrap', ...obj.css } });
     let lastInt = optionArr.length - 1;

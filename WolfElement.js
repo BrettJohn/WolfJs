@@ -1,4 +1,7 @@
 class WolfElement extends Theme {
+    headEl;
+    colSize;
+
     configurePage(obj) {
         this.configureTheme();
         Core.objCopy(obj, this);
@@ -117,21 +120,10 @@ class WolfElement extends Theme {
     }
 
     input(obj = {}) {
-        this.inputCss =  {
-            display: 'inline-block',
-            margin: '0px',
-            padding: '0px 0px 0px 5px',
-            height: '28px',
-            color: this.color7,
-            background: this.color9,
-            border: '0.25px solid ' + this.color2,
-            boxShadow: 'inset 0px 4px 4px rgba(0, 0, 0, 0.25)',
-            borderRadius: '5px'
-        };
         if (!obj.maxLength) {
             obj.maxLength = 50;
         }
-        obj.css = { ...this.inputCss, ...this.fullWidthCss, ...this.inputThemeCss, ...obj.css };
+        obj.css = { ...this.inputCss(), ...this.fullWidthCss, ...obj.css };
         let input = this.core(obj, 'input');
         this.controlArr.push(input);
         return input;
@@ -152,12 +144,7 @@ class WolfElement extends Theme {
         };
         obj.css = { ...this.buttonCss, ...obj.css };
         if (typeof obj.hover !== 'object') {
-            this.buttonHoverCss = {
-                backgroundColor: this.color2,
-                color: this.color1,
-                ...this.buttonHoverThemeCss
-            };
-            obj.hover = { ...this.buttonHoverCss, ...obj.hover };
+            obj.hover = { ...this.buttonHoverCss(), ...obj.hover };
         }
         this.addCss(`button:disabled, button[disabled] { cursor:not-allowed; }`);
         let button = this.core(obj, 'button');

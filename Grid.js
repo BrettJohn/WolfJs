@@ -1,39 +1,9 @@
 Page.prototype.dataGrid = async function(Operation, controllerStr, obj = {}) {
-    let themeObj = {
-        controlsColor: this.color1,
-        controlsBack: 'rgba(0,0,0,0.75)',
-        controlsDivider: '1px solid rgba(255,255,255,0.12)',
-        rowBack: 'rgba(0,0,0,0.6)',
-        rowColor: this.color1,
-        headBack: 'rgba(0,0,0,0.85)',
-        headColor: 'rgba(255,255,255,0.75)',
-        headBorder: 'none',
-        radius: '6px',
-        controlsRadius: '5px',
-        border: '1px solid rgba(255,255,255,0.14)',
-        shadow: '0 10px 30px rgba(0,0,0,0.6)',
-        hoverBack: `color-mix(in srgb, ${this.color2} 25%, transparent)`,
-        hoverColor: '#fff',
-        controlHeight: '34px',
-        ...this.gridThemeCss
-    };
-    themeObj.controlCss = { height: themeObj.controlHeight, margin: 0, ...this.gridThemeCss?.controlCss };
-    themeObj.buttonCss = { ...themeObj.controlCss, ...this.gridThemeCss?.buttonCss };
-    themeObj.headCss = {
-        fontSize: '16px',
-        letterSpacing: '1px',
-        textTransform: 'uppercase',
-        padding: '14px 8px',
-        borderBottom: '2px solid ' + this.color2,
-        ...this.gridThemeCss?.headCss
-    };
-    themeObj.cellCss = {
-        border: 'none',
-        borderBottom: '1px solid rgba(255,255,255,0.07)',
-        padding: '14px 8px',
-        fontSize: '19px',
-        ...this.gridThemeCss?.cellCss
-    };
+    let themeObj = this.gridThemeObj();
+    let controlCss = this.gridControlCss();
+    let buttonCss = this.gridButtonCss();
+    let headCss = this.gridHeadCss();
+    let cellCss = this.gridCellCss();
     if (!this.dataGridCssAddedBool) {
         this.dataGridCssAddedBool = true;
         this.addCss(
@@ -65,7 +35,7 @@ Page.prototype.dataGrid = async function(Operation, controllerStr, obj = {}) {
     let objArr = resultObj.EntityArr;
     let totalInt = resultObj.Total;
     let optionArr = [2, 5, 10, 25, 50, 100, 500];
-    let rowCss = { height: themeObj.controlHeight, display: 'flex', alignItems: 'center', justifyContent: 'center' };
+    let rowCss = { height: controlCss.height, display: 'flex', alignItems: 'center', justifyContent: 'center' };
     let borderRightStr = themeObj.controlsDivider;
     grid.table = this.table({ className: 'data-grid', css: { width: '100%' } });
     grid.tableWrapDiv = this.div({ className: 'data-grid-wrap' });
@@ -74,7 +44,7 @@ Page.prototype.dataGrid = async function(Operation, controllerStr, obj = {}) {
 
     grid.styleList = (dropdown) => {
         dropdown.div.style.position = 'relative';
-        dropdown.btn.css({ ...themeObj.buttonCss, height: themeObj.controlHeight });
+        dropdown.btn.css({ ...buttonCss, height: controlCss.height });
         Object.assign(
             dropdown.listDiv.style,
             {
@@ -99,7 +69,7 @@ Page.prototype.dataGrid = async function(Operation, controllerStr, obj = {}) {
     grid.filterDropdown = this.dropdown({ stacked: true }, [], () => {});
     grid.styleList(grid.filterDropdown);
     filterSelect.add(grid.filterDropdown.div);
-    let filterInput = this.input({ css: themeObj.controlCss });
+    let filterInput = this.input({ css: controlCss });
     grid.applyFilter = async () => {
         let keyStr = grid.filterDropdown.selectedItem;
         let filterArr = [];
@@ -114,7 +84,7 @@ Page.prototype.dataGrid = async function(Operation, controllerStr, obj = {}) {
                 .add(this.col2({ css: gapCss })
                     .add(this.button({
                         title: 'Apply filter',
-                        css: themeObj.buttonCss,
+                        css: buttonCss,
                         onclick: async () => { await grid.applyFilter(); }
                     })
                         .add(this.icon('search'))
@@ -123,7 +93,7 @@ Page.prototype.dataGrid = async function(Operation, controllerStr, obj = {}) {
                 .add(this.col2()
                     .add(this.button({
                         title: 'Clear filter',
-                        css: themeObj.buttonCss,
+                        css: buttonCss,
                         onclick: async () => {
                             filterInput.value = '';
                             await grid.callBackend(null, null, [])
@@ -279,7 +249,7 @@ Page.prototype.dataGrid = async function(Operation, controllerStr, obj = {}) {
             fontWeight: 'normal',
             ...this.centerTextCss,
             border: themeObj.headBorder,
-            ...themeObj.headCss
+            ...headCss
         };
         let borderRadiusStr = themeObj.radius;
         let tr = this.tr({css: { width: '100%' }});
@@ -372,7 +342,7 @@ Page.prototype.dataGrid = async function(Operation, controllerStr, obj = {}) {
                             padding: '8px',
                             ...this.centerTextCss,
                             border: '1px solid ' + backgroundColor,
-                            ...themeObj.cellCss,
+                            ...cellCss,
                             ...borderRadiusObj
                         }
                     });
