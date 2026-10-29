@@ -141,3 +141,8 @@ Element.prototype.invisible = function() {
     this.style.visibility = 'hidden';
     return this;
 };
+
+Element.prototype.clear = function() {
+    this.replaceChildren();
+    return this;
+};

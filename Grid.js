@@ -154,7 +154,7 @@ Page.prototype.dataGrid = async function(Operation, controllerStr, obj = {}) {
         perPageSelect.setSelected(perPageInt);
         let paginationInt = Math.ceil(totalInt / perPageInt);
         grid.lastPageInt = paginationInt;
-        pageSelect.innerHTML = '';
+        pageSelect.clear();
         pageSelect.add(this.a({
             html: '&#9665',
             css: { paddingRight: '5px'},
@@ -295,7 +295,7 @@ Page.prototype.dataGrid = async function(Operation, controllerStr, obj = {}) {
         if (selectedFilterStr != null) {
             grid.filterDropdown.setSelected(selectedFilterStr);
         }
-        filterSelect.innerHTML = '';
+        filterSelect.clear();
         filterSelect.add(grid.filterDropdown.div);
         objArr.forEach((entityObj) => {
             let borderRadiusObj = {};

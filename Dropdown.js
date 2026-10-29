@@ -58,7 +58,7 @@ Page.prototype.dropdown = function(
     });
     ddObj.setOptions = () => {
         if (optionArr) {
-            listDiv.innerHTML = '';
+            listDiv.clear();
             for (let optionObj of optionArr) {
                 if (typeof optionObj !== 'object') {
                     optionObj = { Id: optionObj, Name: Core.splitCamel(optionObj) };
