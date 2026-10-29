@@ -74,6 +74,11 @@ pageObj.loadPage();
 The default theme loads `Assets/Images/back.png` (background), `logo.png` and `main.png` (tab icon). Ship those, or
 set `backCss`, `logoSrcStr` and `titleImgPathStr` in your `configureTheme()`.
 
+Controls read their look from theme methods (`inputCss`, `buttonHoverCss`, `dropdownThemeObj`, `toggleThemeObj`,
+`gridThemeObj`, `gridControlCss`, `gridButtonCss`, `gridHeadCss`, `gridCellCss`). They read the colours when a control
+is built, so a colour set in `configureTheme()` reaches them. Override one in your `Theme` class:
+`gridHeadCss() { return { ...super.gridHeadCss(), fontSize: '18px' }; }`.
+
 Put the release in the folder name (`wolf/v1.0.0/`) so browsers fetch new files after an upgrade.
 
 `Page.checkUser()` does nothing here. A front end with logins overrides it, as Wolf's own `Core/Wolf.js` does.
