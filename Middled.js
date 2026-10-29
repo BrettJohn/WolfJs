@@ -44,6 +44,8 @@ class Middled extends Container {
         return this.middledCol;
     }
 
+    async complete() {}
+
     btnRow(elArr, css = {}) {
         let midCol = this.col6();
         elArr.forEach((el) => midCol.add(el));
