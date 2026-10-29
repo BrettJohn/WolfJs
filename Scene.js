@@ -271,7 +271,29 @@ Page.prototype.scene = function(obj) {
             }
         }
     }
-    let vertexObj = { box: boxArr, cylinder: cylinderArr };
+    let sphereArr = [];
+    let ringInt = 16;
+    for (let ringIndexInt = 0; ringIndexInt < ringInt; ringIndexInt++) {
+        for (let i = 0; i < segmentInt; i++) {
+            let cornerMatrix = [
+                [ringIndexInt, i],
+                [ringIndexInt + 1, i],
+                [ringIndexInt + 1, i + 1],
+                [ringIndexInt, i],
+                [ringIndexInt + 1, i + 1],
+                [ringIndexInt, i + 1]
+            ];
+            for (let cornerArr of cornerMatrix) {
+                let latFlt = cornerArr[0] / ringInt * Math.PI;
+                let lngFlt = cornerArr[1] / segmentInt * Math.PI * 2;
+                let xFlt = Math.sin(latFlt) * Math.cos(lngFlt);
+                let yFlt = Math.sin(latFlt) * Math.sin(lngFlt);
+                let zFlt = Math.cos(latFlt);
+                sphereArr.push(xFlt / 2, yFlt / 2, zFlt / 2, xFlt, yFlt, zFlt);
+            }
+        }
+    }
+    let vertexObj = { box: boxArr, cylinder: cylinderArr, sphere: sphereArr };
     for (let meshStr in vertexObj) {
         let vertexArr = vertexObj[meshStr];
         let bufferObj = glObj.createBuffer();

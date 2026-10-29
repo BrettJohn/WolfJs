@@ -232,7 +232,8 @@ class WolfElement extends Theme {
             search: 'M11,6.5 A4.5,4.5 0 1,1 2,6.5 A4.5,4.5 0 1,1 11,6.5 M9.7,9.7 L14.5,14.5',
             refresh: 'M13.5,8 A5.5,5.5 0 1,1 11.9,4.1 M12.4,1.4 L12,4.6 L8.8,4.2',
             eye: eyeStr,
-            eyeOff: `${eyeStr} M2.5,2.5 L13.5,13.5`
+            eyeOff: `${eyeStr} M2.5,2.5 L13.5,13.5`,
+            speak: 'M2,6 L5,6 L9,3 L9,13 L5,10 L2,10 Z M11.5,5.5 Q13,8 11.5,10.5 M13.5,3.5 Q16,8 13.5,12.5'
         };
         return this.svg({
             attr: { viewBox: '0 0 16 16' },
