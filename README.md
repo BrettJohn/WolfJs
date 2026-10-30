@@ -17,6 +17,7 @@ served by nginx, lists the tags itself.
 | `Page.js`, `Container.js`, `Middled.js`, `MiddledController.js` | Page classes, in that order: each extends the last |
 | `BackEnd.js` | `fetchApi()` and the loading overlay |
 | `Grid.js`, `Dropdown.js`, `Toggle.js`, `Upload.js`, `Dock.js`, `Scene.js`, `Slider.js`, `Math.js` | Extras on `Page.prototype` |
+| `Choice.js` | `choice()`: radio cards on `Container.prototype`, with `.lettered()` and `.glowing(colorStr)` |
 | `Lecturer.js` | `Lecturer`: reads text aloud with a 3D face |
 
 ## Use it without PHP
