@@ -169,3 +169,47 @@ Base.prototype.lecturerThemeObj = function() {
         maleObj: { hairArr: [0.17, 0.12, 0.1], lipArr: [0.7, 0.43, 0.4], shirtArr: [0.24, 0.32, 0.46] }
     };
 }
+
+Base.prototype.choiceListCss = function() {
+    return { display: 'flex', flexDirection: 'column', gap: '8px' };
+}
+
+Base.prototype.choiceCss = function() {
+    return {
+        display: 'flex',
+        alignItems: 'flex-start',
+        gap: '10px',
+        padding: '10px 12px',
+        borderRadius: '10px',
+        border: `1px solid ${this.color11}`,
+        backgroundColor: 'rgba(255, 255, 255, 0.05)',
+        color: this.color1,
+        textDecoration: 'none',
+        cursor: 'pointer',
+        lineHeight: 1.45,
+        transition: 'border-color .15s, background-color .15s'
+    };
+}
+
+Base.prototype.choiceOnCss = function() {
+    return { borderColor: this.color2, backgroundColor: `color-mix(in srgb, ${this.color2} 15%, transparent)` };
+}
+
+Base.prototype.choiceDotCss = function() {
+    return {
+        flex: '0 0 auto',
+        width: '18px',
+        height: '18px',
+        marginTop: '2px',
+        borderRadius: '50%',
+        border: `2px solid ${this.color11}`,
+        boxSizing: 'border-box',
+        backgroundColor: 'transparent',
+        boxShadow: 'none',
+        transition: 'all .15s'
+    };
+}
+
+Base.prototype.choiceDotOnCss = function() {
+    return { borderColor: this.color2, backgroundColor: this.color2, boxShadow: `inset 0 0 0 3px ${this.color4}` };
+}
