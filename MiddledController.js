@@ -11,14 +11,14 @@ class MiddledController extends Middled {
         await this.checkUser();
         this.Id = Core.getUrlParam('Id');
         let row = this.row({ css: { paddingTop: '20px' } });
-        this.completeBtn = this.confirmBtn({ html: 'Complete', onclick: () => { this.complete(); }});
+        this.completeBtn = this.confirmBtn({ html: 'Complete', onclick: () => this.complete() });
         row.add(this.col3());
         if (this.Id) {
             row.add(
                 this.col3({ css: { ...this.centerTextCss } }).add(
                     this.confirmBtn({
                         html: 'Delete',
-                        onclick: () => { this.askDelete(); },
+                        onclick: () => this.askDelete(),
                         css: { backgroundColor: this.color13 }
                     })
                 )
