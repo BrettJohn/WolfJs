@@ -42,7 +42,7 @@ Container.prototype.choice = function(optionMatrix, valueStr = '') {
         }
         return choiceEl;
     };
-    for (let [optionStr, textStr] of optionMatrix) {
+    for (let [optionStr, textStr = optionStr] of optionMatrix) {
         let dotEl = this.span({ css: dotCss });
         let cardEl = this.a({ role: 'radio', tabIndex: 0, css: cardCss })
             .add(dotEl)
