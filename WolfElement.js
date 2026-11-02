@@ -148,6 +148,9 @@ class WolfElement extends Theme {
         }
         this.addCss(`button:disabled, button[disabled] { cursor:not-allowed; }`);
         let button = this.core(obj, 'button');
+        if (obj.onclick) {
+            button.busyClick(obj.onclick);
+        }
         this.controlArr.push(button);
         return button;
     }

@@ -146,3 +146,18 @@ Element.prototype.clear = function() {
     this.replaceChildren();
     return this;
 };
+
+Element.prototype.busyClick = function(clickFn) {
+    this.onclick = async (event) => {
+        if (this.busyBool) {
+            return;
+        }
+        this.busyBool = true;
+        try {
+            await clickFn(event);
+        } finally {
+            this.busyBool = false;
+        }
+    };
+    return this;
+};
