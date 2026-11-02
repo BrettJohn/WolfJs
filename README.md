@@ -16,7 +16,7 @@ served by nginx, lists the tags itself.
 | `WolfElement.js` | Builders: `div()`, `a()`, `button()`, `markdown()`, rows and columns |
 | `Page.js`, `Container.js`, `Middled.js`, `MiddledController.js` | Page classes, in that order: each extends the last |
 | `BackEnd.js` | `fetchApi()` and the loading overlay |
-| `Grid.js`, `Dropdown.js`, `Toggle.js`, `Upload.js`, `Dock.js`, `Scene.js`, `Slider.js`, `Math.js` | Extras on `Page.prototype` |
+| `Grid.js`, `Dropdown.js`, `Toggle.js`, `Upload.js`, `Dock.js`, `Scene.js`, `Slider.js`, `Math.js`, `Camera.js` | Extras on `Page.prototype` |
 | `Choice.js` | `choice()`: radio cards on `Container.prototype`, with `.lettered()` and `.glowing(colorStr)` |
 | `Lecturer.js` | `Lecturer`: reads text aloud with a 3D face |
 
@@ -80,6 +80,12 @@ Controls read their look from theme methods (`inputCss`, `buttonHoverCss`, `drop
 `sliderThemeObj`, `gridThemeObj`, `gridControlCss`, `gridButtonCss`, `gridHeadCss`, `gridCellCss`). They read the
 colours when a control is built, so a colour set in `configureTheme()` reaches them. Override one in your `Theme` class:
 `gridHeadCss() { return { ...super.gridHeadCss(), fontSize: '18px' }; }`.
+
+`Camera.js`: `cameraObj = this.camera({ heightStr, lapseSecondsInt, tagStr })` builds a live webcam view with a
+camera picker and Photo, Record and Time-lapse buttons; place `cameraObj.div`. A time-lapse records 50 ms every
+`lapseSecondsInt` seconds (5 by default) and pauses in between. Each capture goes to `this.saveCapture(captureObj)`
+(`blobObj`, `kindStr`, `nameStr`, `tagStr`), which downloads it here; Wolf's `Core/Capture.js` saves it to Core
+instead. Set `cameraObj.onStatusFn` and `cameraObj.onSavedFn` to follow it. Needs https or localhost.
 
 `Slider.js`: `this.slider({ min, max, step, value, css })` returns a range input with a filled track and a thumb that
 glows on hover and focus. Its colours and sizes come from `sliderThemeObj`; the first slider on a page adds the rules.

@@ -216,6 +216,7 @@ class WolfElement extends Theme {
     }
     style(obj = {}) { return this.core(obj, 'style'); }
     canvas(obj = {}) { return this.core(obj, 'canvas'); }
+    video(obj = {}) { return this.core(obj, 'video'); }
     svg(obj = {}) {
         this.svgCss = { display: 'block', fill: 'currentColor' };
         obj.css = { ...this.svgCss, ...obj.css };
