@@ -7,15 +7,15 @@ Page.prototype.slider = function(obj) {
     }
     let slider = this.core({ type: 'range', ...obj }, 'input');
     slider.dataset.slider = 'true';
-    let paintFn = () => {
+    slider.paint = () => {
         let minFlt = Number(slider.min);
         let maxFlt = Number(slider.max);
         let valueFlt = Number(slider.value);
         let fillFlt = (valueFlt - minFlt) / (maxFlt - minFlt) * 100;
         slider.style.setProperty('--fill', `${fillFlt}%`);
     };
-    slider.addEventListener('input', paintFn);
-    paintFn();
+    slider.addEventListener('input', slider.paint);
+    slider.paint();
     return slider;
 };
 
