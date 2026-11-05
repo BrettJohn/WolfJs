@@ -51,7 +51,7 @@ Container.prototype.choice = function(optionMatrix, valueStr = '') {
         cardEl.dotEl = dotEl;
         cardEl.onclick = () => choiceEl.onChoose(optionStr);
         cardEl.addEventListener('keydown', (event) => {
-            if (['Enter', ' '].includes(event.key)) {
+            if (event.key === ' ') {
                 event.preventDefault();
                 choiceEl.onChoose(optionStr);
             }
