@@ -30,6 +30,17 @@ Container.prototype.choice = function(optionMatrix, valueStr = '') {
         }
     };
     choiceEl.onChoose = (chosenStr) => choiceEl.pick(chosenStr);
+    choiceEl.focus = (focusOptionObj) => {
+        let chosenStr = choiceEl.chosenStr;
+
+        let focusCardEl = cardArr[0];
+        for (let cardEl of cardArr) {
+            if (cardEl.valueStr === chosenStr) {
+                focusCardEl = cardEl;
+            }
+        }
+        focusCardEl.focus(focusOptionObj);
+    };
     choiceEl.glowing = (colorStr) => {
         choiceEl.glowColor = colorStr;
         return choiceEl;
